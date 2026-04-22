@@ -2,7 +2,7 @@ package Adamdar;
 
 import Research.Researcher;
 import AcademicThigns.*;
-import Enums.SCHOOLS;
+import Enums.*;
 import Research.ResearchDELO;
 import AcademicThigns.Enrollment;
 

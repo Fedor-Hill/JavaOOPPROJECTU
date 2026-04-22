@@ -2,24 +2,16 @@ package Application;
 
 import java.io.*;
 import java.util.*;
+import Application.VVSP;
 
 /**
  * @author Meiramkhan Alinur
  */
 public class Main {
 
-    /**
-     * Default constructor
-     */
-    public Main() {
-    }
-
-    /**
-     * @param args 
-     * @return
-     */
-    public void main(String args) {
-        // TODO implement here
+    public static void main(String[] args) {
+        VVSP vvsp = new VVSP();
+        vvsp.executeVVSP();
         
     }
 

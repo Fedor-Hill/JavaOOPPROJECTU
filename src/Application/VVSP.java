@@ -37,26 +37,22 @@ class Window {
 
             switch (choice) {
                 case "1":
-                    System.out.println("-> Выбрано: Просмотр студентов");
+                    System.out.println("-> selected: LOGIN");
                     break;
-                case "2":
-                    System.out.println("-> Выбрано: Добавить научный проект");
-                    break;
-                case "0":
+                case "67":
                     isRunning = false;
-                    System.out.println("Выход из системы...");
+                    System.out.println("Goodbye lol...");
                     break;
                 default:
-                    System.out.println("Ошибка: неверный выбор");
+                    System.out.println("ERROR: wrong input stoopid");
             }
         }
     }
 
     private void printMenu() {
         System.out.println("\n--- VVSP SYSTEM MENU ---");
-        System.out.println("1. Просмотр студентов");
-        System.out.println("2. Добавить научный проект");
-        System.out.println("0. Выход");
+        System.out.println("1: LOGIN");
+        System.out.println("67: EXIT");
         System.out.print("Выберите действие: ");
     }
 }

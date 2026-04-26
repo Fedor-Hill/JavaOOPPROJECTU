@@ -16,8 +16,8 @@ public class Teacher extends Employee implements Researcher {
     /**
      * Default constructor
      */
-    public Teacher(String f_name, String l_name, String email, String phoneNumber, LocalDate birthday, GENDER gender) {
-        super(f_name, l_name, email, phoneNumber, birthday, gender, phoneNumber);
+    public Teacher(String f_name, String l_name, String email, String phoneNumber, LocalDate birthday, GENDER gender, String password) {
+        super(f_name, l_name, email, phoneNumber, birthday, gender, phoneNumber, password);
     }
 
     /**

@@ -14,8 +14,8 @@ public class Employee extends Adam {
     /**
      * Default constructor
      */
-    public Employee(String f_name, String l_name, String email, String phoneNumber, LocalDate birthday, GENDER gender, String job_title) {
-        super(f_name, l_name, email, phoneNumber, birthday, gender);
+    public Employee(String f_name, String l_name, String email, String phoneNumber, LocalDate birthday, GENDER gender, String password, String job_title) {
+        super(f_name, l_name, email, phoneNumber, birthday, gender, password);
         this.job_title = job_title; 
     }
 

@@ -17,9 +17,9 @@ public class Student extends Adam implements Researcher {
     /**
      * Default constructor
      */
-    public Student(String f_name, String l_name, String email, String phoneNumber, LocalDate birthday, GENDER gender,
+    public Student(String f_name, String l_name, String email, String phoneNumber, LocalDate birthday, GENDER gender, String password,
             Major major, SCHOOLS school) {
-        super(f_name, l_name, email, phoneNumber, birthday, gender);
+        super(f_name, l_name, email, phoneNumber, birthday, gender, password);
         this.major = major;
 
         this.transcript = new ArrayList<>();

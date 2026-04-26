@@ -14,8 +14,8 @@ public class Manager extends Employee {
     /**
      * Default constructor
      */
-    public Manager(String f_name, String l_name, String email, String phoneNumber, LocalDate birthday, GENDER gender) {
-        super(f_name, l_name, email, phoneNumber, birthday, gender, phoneNumber);
+    public Manager(String f_name, String l_name, String email, String phoneNumber, LocalDate birthday, GENDER gender, String password) {
+        super(f_name, l_name, email, phoneNumber, birthday, gender, phoneNumber, password);
     }
 
     /**

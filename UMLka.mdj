@@ -2943,12 +2943,50 @@
 											"model": {
 												"$ref": "AAAAAAGds414le+yza8="
 											},
+											"subViews": [
+												{
+													"_type": "UMLOperationView",
+													"_id": "AAAAAAGdyXuxbgU1pqI=",
+													"_parent": {
+														"$ref": "AAAAAAGds414lu+7QFw="
+													},
+													"model": {
+														"$ref": "AAAAAAGdyXuxXgUyHYU="
+													},
+													"font": "Arial;13;0",
+													"parentStyle": true,
+													"left": 1101,
+													"top": 409,
+													"width": 203.287109375,
+													"height": 13,
+													"text": "+createDean(): Dean",
+													"horizontalAlignment": 0
+												},
+												{
+													"_type": "UMLOperationView",
+													"_id": "AAAAAAGdyXv2egU+uBs=",
+													"_parent": {
+														"$ref": "AAAAAAGds414lu+7QFw="
+													},
+													"model": {
+														"$ref": "AAAAAAGdyXv2dwU79Ik="
+													},
+													"font": "Arial;13;0",
+													"parentStyle": true,
+													"left": 1101,
+													"top": 424,
+													"width": 203.287109375,
+													"height": 13,
+													"text": "+createManager(): Manager",
+													"horizontalAlignment": 0
+												}
+											],
 											"font": "Arial;13;0",
 											"parentStyle": true,
 											"left": 1096,
 											"top": 404,
 											"width": 213.287109375,
-											"height": 10
+											"height": 38
 										},
 										{
 											"_type": "UMLReceptionCompartmentView",
@@ -2987,7 +3025,7 @@
 									"left": 1096,
 									"top": 356,
 									"width": 212.287109375,
-									"height": 58,
+									"height": 86,
 									"nameCompartment": {
 										"$ref": "AAAAAAGds414le+1O3k="
 									},
@@ -3026,7 +3064,7 @@
 											"visible": false,
 											"font": "Arial;13;0",
 											"parentStyle": false,
-											"left": 1184,
+											"left": 1183,
 											"top": 315,
 											"height": 13,
 											"alpha": 1.5707963267948966,
@@ -3048,7 +3086,7 @@
 											"visible": null,
 											"font": "Arial;13;0",
 											"parentStyle": false,
-											"left": 1169,
+											"left": 1168,
 											"top": 315,
 											"height": 13,
 											"alpha": 1.5707963267948966,
@@ -3070,7 +3108,7 @@
 											"visible": false,
 											"font": "Arial;13;0",
 											"parentStyle": false,
-											"left": 1213,
+											"left": 1212,
 											"top": 314,
 											"height": 13,
 											"alpha": -1.5707963267948966,
@@ -3090,7 +3128,7 @@
 										"$ref": "AAAAAAGds414le+0re0="
 									},
 									"lineStyle": 1,
-									"points": "1201:355;1198:287",
+									"points": "1200:355;1197:287",
 									"showVisibility": true,
 									"nameLabel": {
 										"$ref": "AAAAAAGds4143O/e2/o="
@@ -3176,6 +3214,7 @@
 									},
 									"name": "program",
 									"visibility": "private",
+									"type": "",
 									"multiplicity": "1"
 								},
 								{
@@ -3339,6 +3378,7 @@
 									},
 									"name": "gender",
 									"visibility": "private",
+									"type": "",
 									"multiplicity": "1"
 								}
 							]
@@ -3375,6 +3415,50 @@
 									"name": "accesses",
 									"visibility": "private",
 									"type": "List<ACCESS_RIGHT>"
+								}
+							],
+							"operations": [
+								{
+									"_type": "UMLOperation",
+									"_id": "AAAAAAGdyXuxXgUyHYU=",
+									"_parent": {
+										"$ref": "AAAAAAGds414le+yza8="
+									},
+									"name": "createDean",
+									"parameters": [
+										{
+											"_type": "UMLParameter",
+											"_id": "AAAAAAGdyXv2ZQU5j5A=",
+											"_parent": {
+												"$ref": "AAAAAAGdyXuxXgUyHYU="
+											},
+											"type": {
+												"$ref": "AAAAAAGds3Ulreupxbo="
+											},
+											"direction": "return"
+										}
+									]
+								},
+								{
+									"_type": "UMLOperation",
+									"_id": "AAAAAAGdyXv2dwU79Ik=",
+									"_parent": {
+										"$ref": "AAAAAAGds414le+yza8="
+									},
+									"name": "createManager",
+									"parameters": [
+										{
+											"_type": "UMLParameter",
+											"_id": "AAAAAAGdyXwZMQVCtjw=",
+											"_parent": {
+												"$ref": "AAAAAAGdyXv2dwU79Ik="
+											},
+											"type": {
+												"$ref": "AAAAAAGdpXm+hpLfaUU="
+											},
+											"direction": "return"
+										}
+									]
 								}
 							]
 						}

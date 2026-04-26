@@ -17,14 +17,15 @@ public abstract class Adam {
     /**
      * Default constructor
      */
-    public Adam(String f_name, String l_name, String email, String phoneNumber, LocalDate birthday, GENDER gender) {
+    public Adam(String f_name, String l_name, String email, String phoneNumber, LocalDate birthday, GENDER gender, String password) {
         this.f_name = f_name;
         this.l_name = l_name;
-        this.email = email; 
-        this.birthday = birthday; 
+        this.email = email;
+        this.birthday = birthday;
         this.phoneNumber = phoneNumber;
 
         this.id = IdGenerator.generateStudentId();
+        this.password = password; 
     }
 
     /**
@@ -61,6 +62,12 @@ public abstract class Adam {
      * 
      */
     private GENDER gender;
+
+    private String password; 
+
+    public boolean loginTo(String password) {
+        return this.password.equals(password);
+    };
 
     /**
      * @return String

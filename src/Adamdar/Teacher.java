@@ -5,6 +5,7 @@ import Enums.*;
 import Research.ResearchDELO;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -15,7 +16,8 @@ public class Teacher extends Employee implements Researcher {
     /**
      * Default constructor
      */
-    public Teacher() {
+    public Teacher(String f_name, String l_name, String email, String phoneNumber, LocalDate birthday, GENDER gender, String password) {
+        super(f_name, l_name, email, phoneNumber, birthday, gender, phoneNumber, password);
     }
 
     /**
@@ -35,12 +37,4 @@ public class Teacher extends Employee implements Researcher {
         // TODO implement Researcher.getResearchDELO() here
         return null;
     }
-
-    /**
-     * 
-     */
-    public void Operation2() {
-        // TODO implement Researcher.Operation2() here
-    }
-
 }

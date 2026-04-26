@@ -4,20 +4,27 @@ import Research.Researcher;
 import AcademicThigns.*;
 import Enums.*;
 import Research.ResearchDELO;
-import AcademicThigns.Enrollment;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
- * @author Meiramkhan Alinur
+ * @author Kim Alina
  */
 public class Student extends Adam implements Researcher {
 
     /**
      * Default constructor
      */
-    public Student() {
+    public Student(String f_name, String l_name, String email, String phoneNumber, LocalDate birthday, GENDER gender, String password,
+            Major major, SCHOOLS school) {
+        super(f_name, l_name, email, phoneNumber, birthday, gender, password);
+        this.major = major;
+
+        this.transcript = new ArrayList<>();
+        this.school = school; 
+
     }
 
     /**
@@ -50,7 +57,6 @@ public class Student extends Adam implements Researcher {
      */
     private PROGRAMS program;
 
-
     /**
      * @return
      */
@@ -58,12 +64,4 @@ public class Student extends Adam implements Researcher {
         // TODO implement Researcher.getResearchDELO() here
         return null;
     }
-
-    /**
-     * 
-     */
-    public void Operation2() {
-        // TODO implement Researcher.Operation2() here
-    }
-
 }

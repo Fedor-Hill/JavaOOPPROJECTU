@@ -13,7 +13,9 @@ public abstract class Printer {
     }
 
     public static void printError(String msg) {
-        System.out.println(RED + "-ERROR-: " + msg + RESET);
+        System.err.println(RED + msg + RESET);
+
+        // System.out.println(RED + "-ERROR-: " + msg + RESET);
     }
 
     public static void printWarning(String message) {
@@ -21,7 +23,7 @@ public abstract class Printer {
     }
 
     public static void printInfo(String message) {
-        System.out.println(BLUE + "-INFO-: " + message + RESET);
+        System.out.println(BLUE + message + RESET);
     }
 
 }

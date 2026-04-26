@@ -1,55 +1,51 @@
 package Application;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
+import Adamdar.Adam;
 import Adamdar.Admin;
+import Adamdar.Student;
 
 public class DataStorage {
-    private static final String FILE_USER = "users.ser";
-    private static final String FILE_ADMIN = "admins.ser";
+    private static final String ADMIN_FILE = "admins.ser";
+    private static final String AMADAR_FILE = "adamdar.ser";
 
-    public static void saveToFile(Object object, String filename) {
+    public static <T> void save(Map<String, T> map, String filename) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
-            oos.writeObject(object);
-            System.out.println("Data succes write to " + filename);
+            oos.writeObject(map);
         } catch (IOException e) {
-            System.out.println("Error: " + e.getMessage());
+            System.err.println("Error saving to " + filename + ": " + e.getMessage());
         }
     }
 
-    public static Object loadFromFile(String filename) {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
-            return ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Error to load: " + e.getMessage());
-            return null;
-        }
-    }
-
-    @SuppressWarnings("unchecked") 
-    public static List<Admin> loadAdmins() {
-        File file = new File(FILE_ADMIN);
+    @SuppressWarnings("unchecked")
+    public static <T> Map<String, T> load(String filename) {
+        File file = new File(filename);
+        if (!file.exists())
+            return new HashMap<>(); 
 
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-            return (List<Admin>) ois.readObject();
+            return (Map<String, T>) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            System.err.println("Error when reading: " + e.getMessage());
-            return new ArrayList<>();
+            System.err.println("Error loading from " + filename + ": " + e.getMessage());
+            return new HashMap<>();
         }
     }
 
-    public static void saveAdmins(List<Admin> admins) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_ADMIN))) {
-            oos.writeObject(admins);
-        } catch (IOException e) {
-            System.err.println("Error while saving: " + e.getMessage());
-        }
+    public static void saveAdmins(Map<String, Admin> admins) {
+        save(admins, ADMIN_FILE);
+    }
+
+    public static Map<String, Admin> loadAdmins() {
+        return load(ADMIN_FILE);
+    }
+
+    public static void saveAdamdar(Map<String, Adam> adamdar) {
+        save(adamdar, AMADAR_FILE);
+    }
+
+    public static Map<String, Adam> loadAdamdar() {
+        return load(AMADAR_FILE);
     }
 }

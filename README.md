@@ -30,64 +30,49 @@
 ---
 ### Project File Structure 
 
+## Project Structure
+
+```text
 .
 ├── README.md
 ├── UMLka.mdj
-└── src
-    ├── AcademicThigns
-    │   ├── Attestation.class
-    │   ├── Attestation.java
-    │   ├── Enrollment.class
-    │   ├── Enrollment.java
-    │   ├── Major.class
-    │   ├── Major.java
-    │   ├── Subject.class
-    │   └── Subject.java
-    ├── Adamdar
-    │   ├── Adam.class
-    │   ├── Adam.java
-    │   ├── Admin.class
-    │   ├── Admin.java
-    │   ├── Dean.java
-    │   ├── Employee.class
-    │   ├── Employee.java
-    │   ├── Eva.class
-    │   ├── Eva.java
-    │   ├── Manager.java
-    │   ├── Student.class
-    │   ├── Student.java
-    │   ├── Teacher.class
-    │   └── Teacher.java
-    ├── Application
-    │   ├── DataStorage.class
-    │   ├── DataStorage.java
-    │   ├── Main.class
-    │   ├── Main.java
-    │   ├── Printer.class
-    │   ├── Printer.java
-    │   ├── VVSP.class
-    │   ├── VVSP.java
-    │   └── Window.class
-    ├── Enums
-    │   ├── ACCESS_RIGHT.class
-    │   ├── ACCESS_RIGHT.java
-    │   ├── GENDER.class
-    │   ├── GENDER.java
-    │   ├── PROGRAMS.class
-    │   ├── PROGRAMS.java
-    │   ├── SCHOOLS.class
-    │   ├── SCHOOLS.java
-    │   ├── STATUS.class
-    │   ├── STATUS.java
-    │   ├── TEACHER_LVL.class
-    │   └── TEACHER_LVL.java
-    ├── Research
-    │   ├── ResearchDELO.class
-    │   ├── ResearchDELO.java
-    │   ├── ResearchPaper.java
-    │   ├── ResearchProject.java
-    │   ├── Researcher.class
-    │   └── Researcher.java
-    └── admins.ser
-
-7 directories, 52 files
+└── src/
+    ├── AcademicThigns/
+    │   ├── Attestation.java
+    │   ├── Enrollment.java
+    │   ├── Major.java
+    │   └── Subject.java
+    ├── Adamdar/
+    │   ├── Adam.java
+    │   ├── Admin.java
+    │   ├── Dean.java
+    │   ├── Employee.java
+    │   ├── Eva.java
+    │   ├── Manager.java
+    │   ├── Student.java
+    │   └── Teacher.java
+    ├── Application/
+    │   ├── AdminPanel.java
+    │   ├── DataStorage.java
+    │   ├── IdGenerator.java
+    │   ├── LoginMenu.java
+    │   ├── Main.java
+    │   ├── Printer.java
+    │   ├── Request.java
+    │   ├── RequestHandler.java
+    │   ├── VVSP.java
+    │   └── Window.java
+    ├── Enums/
+    │   ├── ACCESS_RIGHT.java
+    │   ├── GENDER.java
+    │   ├── PROGRAMS.java
+    │   ├── REQUEST_STATUS.java
+    │   ├── SCHOOLS.java
+    │   ├── STATUS.java
+    │   └── TEACHER_LVL.java
+    └── Research/
+        ├── ResearchDELO.java
+        ├── ResearchPaper.java
+        ├── ResearchProject.java
+        └── Researcher.java
+``` 

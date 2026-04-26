@@ -1,8 +1,10 @@
 package Adamdar;
 
+import Enums.GENDER;
 import Enums.SCHOOLS;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -13,12 +15,18 @@ public class Dean extends Employee {
     /**
      * Default constructor
      */
-    public Dean() {
+    public Dean(String f_name, String l_name, String email, String phoneNumber, LocalDate birthday, GENDER gender, SCHOOLS school) {
+        super(f_name, l_name, email, phoneNumber, birthday, gender, phoneNumber);
+        this.school = school;
     }
 
     /**
      * 
      */
     private SCHOOLS school;
+
+    public SCHOOLS getSchool() {
+        return school;
+    }
 
 }

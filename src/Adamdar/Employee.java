@@ -1,7 +1,10 @@
 package Adamdar;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.*;
+
+import Enums.GENDER;
 
 /**
  * @author Meiramkhan Alinur
@@ -11,7 +14,9 @@ public class Employee extends Adam {
     /**
      * Default constructor
      */
-    public Employee() {
+    public Employee(String f_name, String l_name, String email, String phoneNumber, LocalDate birthday, GENDER gender, String job_title) {
+        super(f_name, l_name, email, phoneNumber, birthday, gender);
+        this.job_title = job_title; 
     }
 
     /**

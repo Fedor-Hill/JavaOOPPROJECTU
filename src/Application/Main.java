@@ -1,7 +1,5 @@
 package Application;
 
-import java.io.*;
-import java.util.*;
 import Application.VVSP;
 
 /**
@@ -10,9 +8,6 @@ import Application.VVSP;
 public class Main {
 
     public static void main(String[] args) {
-        VVSP vvsp = new VVSP();
-        vvsp.executeVVSP();
-        
+        VVSP.executeVVSP();
     }
-
 }

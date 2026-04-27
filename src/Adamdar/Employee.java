@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import Enums.GENDER;
 
 /**
- * @author Meiramkhan Alinur
+ * @author Kim Alina
  */
 public class Employee extends Adam {
 

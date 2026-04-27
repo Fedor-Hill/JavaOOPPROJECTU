@@ -10,7 +10,7 @@ import Enums.GENDER;
 
 
 /**
- * @author Meiramkhan Alinur
+ * @author Kim Alina
  */
 public class Manager extends Employee implements RequestHandler {
 

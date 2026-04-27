@@ -5,7 +5,7 @@ import java.time.*;
 import Enums.GENDER;
 
 /**
- * @author Meiramkhan Alinur
+ * @author Kim Alina
  */
 public abstract class Eva implements Serializable {
     private static final long serialVersionUID = 1L;

@@ -6,7 +6,7 @@ import Enums.SCHOOLS;
 import java.time.LocalDate;
 
 /**
- * @author Meiramkhan Alinur
+ * @author Kim Alina
  */
 public class Dean extends Employee {
 

@@ -3,9 +3,7 @@ package Adamdar;
 import Enums.GENDER;
 import Enums.SCHOOLS;
 
-import java.io.*;
 import java.time.LocalDate;
-import java.util.*;
 
 /**
  * @author Meiramkhan Alinur

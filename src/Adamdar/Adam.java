@@ -2,9 +2,6 @@ package Adamdar;
 
 import Enums.GENDER;
 
-import java.io.*;
-import java.util.*;
-
 import Application.IdGenerator;
 
 import java.time.*;

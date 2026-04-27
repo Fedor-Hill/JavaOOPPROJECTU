@@ -1,7 +1,5 @@
 package Application;
 
-import Application.VVSP;
-
 /**
  * @author Meiramkhan Alinur
  */

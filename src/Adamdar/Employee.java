@@ -1,8 +1,6 @@
 package Adamdar;
 
-import java.io.*;
 import java.time.LocalDate;
-import java.util.*;
 
 import Enums.GENDER;
 
@@ -28,5 +26,17 @@ public class Employee extends Adam {
      * 
      */
     private double salary;
+
+    public String getJob_title() {
+        return job_title;
+    }
+
+    public double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
 
 }

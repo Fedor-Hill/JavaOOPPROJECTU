@@ -4,7 +4,6 @@ import Research.Researcher;
 import Enums.*;
 import Research.ResearchDELO;
 
-import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -12,6 +11,8 @@ import java.util.*;
  * @author Meiramkhan Alinur
  */
 public class Teacher extends Employee implements Researcher {
+
+    ResearchDELO researchDELO = new ResearchDELO();
 
     /**
      * Default constructor
@@ -31,10 +32,14 @@ public class Teacher extends Employee implements Researcher {
     private List<ACCESS_RIGHT> accesses;
 
     /**
-     * @return
+     * @return ResearchDELO 
      */
     public ResearchDELO getResearchDELO() {
-        // TODO implement Researcher.getResearchDELO() here
+
+        if (lvl == TEACHER_LVL.Proffessor) {
+            return researchDELO;
+        }
+
         return null;
     }
 }

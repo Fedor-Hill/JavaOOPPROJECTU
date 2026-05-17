@@ -3,10 +3,8 @@ package Research;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.UUID;
 
 public class RecommendationLetter implements Serializable {
-    private String id;
     private Researcher recommender;
     private String researcherName;
     private String content;
@@ -14,7 +12,6 @@ public class RecommendationLetter implements Serializable {
     private String purpose;
     
     public RecommendationLetter(Researcher recommender, String researcherName, String purpose) {
-        this.id = UUID.randomUUID().toString();
         this.recommender = recommender;
         this.researcherName = researcherName;
         this.purpose = purpose;
@@ -44,9 +41,7 @@ public class RecommendationLetter implements Serializable {
         System.out.println("\n" + content);
     }
     
-    public String getId() {
-        return id;
-    }
+   
     
     public String getContent() {
         return content;

@@ -29,7 +29,7 @@ public class DataStorage {
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Error loading from " + filename + ": " + e.getMessage());
             return new HashMap<>();
-        }
+        } 
     }
 
     public static void saveAdmins(Map<String, Admin> admins) {
@@ -42,6 +42,7 @@ public class DataStorage {
 
     public static void saveAdamdar(Map<String, Adam> adamdar) {
         save(adamdar, AMADAR_FILE);
+        Printer.printSucces("FILE SAVED (ADAMDAR)");
     }
 
     public static Map<String, Adam> loadAdamdar() {

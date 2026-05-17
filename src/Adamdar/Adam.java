@@ -3,13 +3,15 @@ package Adamdar;
 import Enums.GENDER;
 
 import Application.IdGenerator;
+import java.io.Serializable;
 
 import java.time.*;
 
 /**
  * @author Kim Alina
  */
-public abstract class Adam {
+public abstract class Adam implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * Default constructor

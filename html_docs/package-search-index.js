@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"AcademicThigns"},{"l":"Adamdar"},{"l":"All Packages","u":"allpackages-index.html"},{"l":"Application"},{"l":"Enums"},{"l":"Exceptions"},{"l":"Research"}];updateSearchResults();

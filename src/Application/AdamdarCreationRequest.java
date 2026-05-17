@@ -1,7 +1,6 @@
 package Application;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.*;
 
 import AcademicThigns.Major;
@@ -16,67 +15,46 @@ public class AdamdarCreationRequest extends Request {
 
     }
 
-    public Student createStudent(Scanner scanner) {
-        // Scanner scanner = new Scanner(System.in);
+    private Student createStudent() {
+        Scanner scanner = new Scanner(System.in);
 
         try {
-            Printer.println("--- Creating a new student ---");
+            Printer.printInfo("--- Creating a new student ---");
 
-            Printer.printAction("First name: ", false);
+            Printer.printInfo("First name: ");
             String f_name = scanner.nextLine();
 
-            Printer.printAction("Last name: ", false);
+            Printer.printInfo("Last name: ");
             String l_name = scanner.nextLine();
 
-            Printer.printAction("Email: ", false);
+            Printer.printInfo("Email: ");
             String email = scanner.nextLine();
 
-            Printer.printAction("Phone number: ", false);
+            Printer.printInfo("Phone number: ");
             String phoneNumber = scanner.nextLine();
 
-            LocalDate birthday = null;
-            while (birthday == null) {
-                try {
-                    Printer.printInfo("Birth date (YYYY-MM-DD): ");
-                    birthday = LocalDate.parse(scanner.nextLine());
-                } catch (DateTimeParseException e) {
-                    Printer.println("Invalid date format. Please use YYYY-MM-DD.");
-                }
-            }
+            Printer.printInfo("Birth date (YYYY-MM-DD): ");
+            LocalDate birthday = LocalDate.parse(scanner.nextLine());
 
-            GENDER gender = null;
-            while (gender == null) {
-                try {
-                    Printer.printInfo("Gender (MALE/FEMALE): ");
-                    gender = GENDER.valueOf(scanner.nextLine().toUpperCase().trim());
-                } catch (IllegalArgumentException e) {
-                    Printer.println("Invalid gender. Please enter MALE or FEMALE.");
-                }
-            }
+            Printer.printInfo("Gender (MALE/FEMALE/CROISSANT): ");
+            GENDER gender = GENDER.valueOf(scanner.nextLine().toUpperCase());
 
             Printer.printInfo("Password: ");
             String password = scanner.nextLine();
 
-            // Printer.printInfo("Major (e.g., SE, IS): ");
+            Printer.printInfo("Major (e.g., SE, IS): ");
             Major major = new Major();
 
-            SCHOOLS school = null;
-            while (school == null) {
-                try {
-                    Printer.printInfo("School (e.g., SITE, BS): ");
-                    school = SCHOOLS.valueOf(scanner.nextLine().toUpperCase().trim());
-                } catch (IllegalArgumentException e) {
-                    Printer.println("Invalid school code. Please try again.");
-                }
-            }
+            Printer.printInfo("School (e.g., SITE, BS): ");
+            SCHOOLS school = SCHOOLS.valueOf(scanner.nextLine().toUpperCase());
 
-            Student st =  new Student(f_name, l_name, email, phoneNumber, birthday, gender, password, major, school);
-            Printer.printSucces("Student was created !");
+            scanner.close();
 
-            return st;
+            return new Student(f_name, l_name, email, phoneNumber, birthday, gender, password, major, school);
 
         } catch (Exception e) {
             Printer.printError("Error while creating student: " + e.getMessage());
+            scanner.close();
             return null;
         }
     }

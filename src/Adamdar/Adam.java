@@ -1,20 +1,30 @@
 package Adamdar;
 
 import Enums.GENDER;
-
 import Application.IdGenerator;
-import java.io.Serializable;
 
-import java.time.*;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.Objects;
 
 /**
+ * Base abstract class for all people in the university system
+ * 
  * @author Kim Alina
  */
-public abstract class Adam implements Serializable {
-    private static final long serialVersionUID = 1L;
+public abstract class Adam {
+
+    private String id;
+    private String f_name;
+    private String l_name;
+    private String email;
+    private String phoneNumber;
+    private LocalDate birthday;
+    private GENDER gender;
+    private String password;
 
     /**
-     * Default constructor
+     * Constructor
      */
     public Adam(String f_name, String l_name, String email, String phoneNumber, LocalDate birthday, GENDER gender, String password) {
         this.f_name = f_name;
@@ -28,85 +38,90 @@ public abstract class Adam implements Serializable {
     }
 
     /**
-     * 
+     * Authentication
      */
-    private String id;
-
-    /**
-     * 
-     */
-    private String f_name;
-
-    /**
-     * 
-     */
-    private String l_name;
-
-    /**
-     * 
-     */
-    private String email;
-
-    /**
-     * 
-     */
-    private String phoneNumber;
-
-    /**
-     * 
-     */
-    private LocalDate birthday;
-
-    /**
-     * 
-     */
-    private GENDER gender;
-
-    private String password; 
-
     public boolean loginTo(String password) {
         return this.password.equals(password);
-    };
-
-    /**
-     * @return String
-     */
-    public String getId() {
-        return this.id;
     }
 
     /**
-     * TODO: UDPDATE
-     * 
-     * @return int
+     * Get full name
+     */
+    public String getFullName() {
+        return f_name + " " + l_name;
+    }
+
+    /**
+     * Calculate real age
      */
     public int getAge() {
-
-        return 19;
+        return Period.between(birthday, LocalDate.now()).getYears();
     }
 
-    public LocalDate getBirthday() {
-        return birthday;
-    }
+    // ===== GETTERS =====
 
-    public String getEmail() {
-        return email;
+    public String getId() {
+        return id;
     }
 
     public String getF_name() {
         return f_name;
     }
 
-    public GENDER getGender() {
-        return gender;
-    }
-
     public String getL_name() {
         return l_name;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public String getPhoneNumber() {
         return phoneNumber;
     }
 
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public GENDER getGender() {
+        return gender;
+    }
+
+    // ===== SETTERS =====
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    // ===== OBJECT METHODS =====
+
+    @Override
+    public String toString() {
+        return "ID: " + id +
+                " | Name: " + getFullName() +
+                " | Email: " + email;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (!(o instanceof Adam adam)) return false;
+
+        return Objects.equals(id, adam.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

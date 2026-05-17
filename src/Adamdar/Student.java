@@ -6,61 +6,355 @@ import Enums.*;
 import Research.ResearchDELO;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Vector;
 
 /**
+ * Student class
+ * 
  * @author Kim Alina
  */
-public class Student extends Adam implements Researcher {
+public class Student extends Adam implements Researcher, Comparable<Student> {
+
+    private int course;
+    private Major major;
+    private double gpa;
+
+    private SCHOOLS school;
+    private PROGRAMS program;
+
+    private Vector<Subject> registeredSubjects;
+    private Vector<Enrollment> transcript;
 
     /**
-     * Default constructor
+     * Constructor
      */
     public Student(String f_name, String l_name, String email, String phoneNumber, LocalDate birthday, GENDER gender, String password,
-            Major major, SCHOOLS school) {
+            Major major, SCHOOLS school, PROGRAMS program) {
         super(f_name, l_name, email, phoneNumber, birthday, gender, password);
+
         this.major = major;
-
-        this.transcript = new ArrayList<>();
         this.school = school; 
+        this.program = program;
 
+        this.course = 1;
+        this.gpa = 0.0;
+
+        this.registeredSubjects = new Vector<>();
+        this.transcript = new Vector<>();
+    }
+
+    // ===== SUBJECT REGISTRATION =====
+
+    /**
+     * Register subject
+     */
+    public void registerSubject(Subject subject) {
+
+        if (registeredSubjects.contains(subject)) {
+
+            System.out.println(
+                    "Subject already registered!"
+            );
+
+            return;
+        }
+
+        if (!subject.isAvailableForMajor(major)) {
+
+            System.out.println(
+                    "Subject is not available for your major!"
+            );
+
+            return;
+        }
+
+        if (getTotalCredits()
+                + subject.getCredits()
+                > getMaxCredits()) {
+
+            System.out.println(
+                    "Credit limit exceeded!"
+            );
+
+            return;
+        }
+
+        registeredSubjects.add(subject);
+
+        System.out.println(
+                "Subject registered successfully!"
+        );
     }
 
     /**
-     * 
+     * Drop subject
      */
-    private int course;
+    public void dropSubject(Subject subject) {
+
+        if (registeredSubjects.remove(subject)) {
+
+            System.out.println(
+                    "Subject dropped!"
+            );
+        }
+        else {
+
+            System.out.println(
+                    "Subject not found!"
+            );
+        }
+    }
 
     /**
-     * 
+     * View registered subjects
      */
-    private Major major;
+    public void viewSubjects() {
+
+        if (registeredSubjects.isEmpty()) {
+
+            System.out.println(
+                    "No registered subjects."
+            );
+
+            return;
+        }
+
+        for (Subject s : registeredSubjects) {
+            System.out.println(s);
+        }
+    }
 
     /**
-     * 
+     * Count credits
      */
-    private double gpa;
+    public int getTotalCredits() {
+
+        int total = 0;
+
+        for (Subject s : registeredSubjects) {
+            total += s.getCredits();
+        }
+
+        return total;
+    }
 
     /**
-     * 
+     * Different limits for programs
      */
-    public List<Enrollment> transcript;
+    public int getMaxCredits() {
+
+        switch (program) {
+
+            case BACHELOR:
+                return 21;
+
+            case MASTER:
+                return 24;
+
+            case PHD:
+                return 18;
+
+            default:
+                return 21;
+        }
+    }
+
+    // ===== TRANSCRIPT =====
 
     /**
-     * 
+     * Add enrollment
      */
-    private SCHOOLS school;
+    public void addEnrollment(
+            Enrollment enrollment
+    ) {
+
+        transcript.add(enrollment);
+    }
 
     /**
-     * 
+     * View transcript
      */
-    private PROGRAMS program;
+    public void viewTranscript() {
+
+        if (transcript.isEmpty()) {
+
+            System.out.println(
+                    "Transcript is empty."
+            );
+
+            return;
+        }
+
+        for (Enrollment e : transcript) {
+            System.out.println(e);
+        }
+    }
 
     /**
-     * @return
+     * View marks
      */
+    public void viewMarks() {
+
+        for (Enrollment e : transcript) {
+
+            System.out.println(
+                    e.getTakedSubject().getTitle()
+                    + " : "
+                    + e.getAttestation()
+                       .getDigitGrade()
+            );
+        }
+    }
+
+    /**
+     * Calculate GPA
+     */
+    public double calculateGpa() {
+
+        if (transcript.isEmpty()) {
+            return 0.0;
+        }
+
+        double total = 0;
+
+        for (Enrollment e : transcript) {
+
+            total += e.getAttestation()
+                      .getDigitGrade();
+        }
+
+        gpa = total / transcript.size();
+
+        return gpa;
+    }
+
+    // ===== TEACHERS =====
+
+    /**
+     * View teachers of subject
+     */
+    public void viewTeachers(
+            Subject subject
+    ) {
+
+        for (Teacher t : subject.getTeachers()) {
+            System.out.println(t);
+        }
+    }
+
+    /**
+     * Rate teacher
+     */
+    public void rateTeacher(
+            Teacher teacher,
+            double rate
+    ) {
+
+        teacher.addRating(rate);
+    }
+
+    // ===== PROGRAM FEATURES =====
+
+    /**
+     * Check if graduate student
+     */
+    public boolean isGraduateStudent() {
+
+        return program == PROGRAMS.MASTER
+                || program == PROGRAMS.PHD;
+    }
+
+    /**
+     * Check if can lead research
+     */
+    public boolean canLeadResearch() {
+
+        return program == PROGRAMS.PHD;
+    }
+
+    /**
+     * PhD special feature
+     */
+    public void publishResearchPaper() {
+
+        if (program != PROGRAMS.PHD) {
+
+            System.out.println(
+                    "Only PhD students can publish papers!"
+            );
+
+            return;
+        }
+
+        System.out.println(
+                getFullName()
+                + " published a research paper!"
+        );
+    }
+
+    // ===== RESEARCH =====
+
+    @Override
     public ResearchDELO getResearchDELO() {
-        // TODO implement Researcher.getResearchDELO() here
+
+        if (program == PROGRAMS.PHD) {
+            return new ResearchDELO();
+        }
+
         return null;
+    }
+
+    // ===== GETTERS =====
+
+    public int getCourse() {
+        return course;
+    }
+
+    public Major getMajor() {
+        return major;
+    }
+
+    public double getGpa() {
+        return calculateGpa();
+    }
+
+    public SCHOOLS getSchool() {
+        return school;
+    }
+
+    public PROGRAMS getProgram() {
+        return program;
+    }
+
+    public Vector<Subject> getRegisteredSubjects() {
+        return registeredSubjects;
+    }
+
+    public Vector<Enrollment> getTranscript() {
+        return transcript;
+    }
+
+    // ===== COMPARABLE =====
+
+    @Override
+    public int compareTo(Student other) {
+
+        return Double.compare(
+                this.getGpa(),
+                other.getGpa()
+        );
+    }
+
+    // ===== OBJECT METHODS =====
+
+    @Override
+    public String toString() {
+
+        return "Student: "
+                + getFullName()
+                + " | Program: "
+                + program
+                + " | GPA: "
+                + String.format("%.2f", getGpa());
     }
 }

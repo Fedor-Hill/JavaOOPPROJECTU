@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.*;
 import Adamdar.*;
 import Enums.GENDER;
-import Enums.SCHOOLS;
 
 /**
  * @author Meiramkhan Alinur
@@ -16,22 +15,6 @@ public class VVSP {
 
     public static void executeVVSP() {
         new LoginMenu().show();
-    }
-}
-
-class TUIConsole {
-
-    public static void clearScreen() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-    }
-
-    public static void waitForEnter() {
-        System.out.println("\n[ Press ENTER to continue... ]");
-        try {
-            System.in.read();
-        } catch (Exception e) {
-        }
     }
 }
 
@@ -87,15 +70,13 @@ class LoginMenu {
             Printer.println(LangManager.get("menu_exit"));
             Printer.printAction(LangManager.get("choose_action"), false);
 
-            String choice = scanner.nextLine().trim();
+            String choice = scanner.nextLine();
 
             switch (choice) {
                 case "1":
-                    Printer.debugPrintInfo("-> selected: LOGIN");
+                    Printer.printInfo("-> selected: LOGIN");
                     printLogin();
-                    break;
                 case "67":
-                    Printer.debugPrintInfo("-> selected: EXIT");
                     isRunning = false;
                     System.out.println(LangManager.get("goodbye"));
                     break;
@@ -107,33 +88,38 @@ class LoginMenu {
                     TUIConsole.waitForEnter();
             }
         }
-
-    }
-
-    private void printBlankPage() {
-
-        while (true) {
-            Printer.printWarning("Its just blank page loool...");
-            TUIConsole.waitForEnter();
-            return;
-        }
     }
 
     private void printLogin() {
+        boolean isRunning = true;
 
-        while (true) {
-            //
-            // FIND ADMINS
-            //
+        //
+        // FIND ADMINS
+        //
 
-            Map<String, Admin> admins = DataStorage.loadAdmins();
-            if (admins.isEmpty()) {
-                LocalDate defaultDate = LocalDate.of(1970, 1, 1);
-                Admin admin = new Admin("0", "fenya", "fenya@kbtu.kz", defaultDate, GENDER.CROISSANT, "1234");
+        Map<String, Admin> admins = DataStorage.loadAdmins();
+        if (admins.isEmpty()) {
+            LocalDate defaultDate = LocalDate.of(1970, 1, 1);
+            Admin admin = new Admin("0", "fenya", "fenya@kbtu.kz", defaultDate, GENDER.CROISSANT, "1234");
 
-                admins.put(admin.getName(), admin);
-                DataStorage.saveAdmins(admins);
-            }
+            admins.put(admin.getName(), admin);
+            DataStorage.saveAdmins(admins);
+        }
+
+        //
+        // FIND USERS (Adamdars)
+        //
+
+        Map<String, Adam> adamdar = DataStorage.loadAdamdar();
+
+        while (isRunning) {
+            System.out.println("--- VVSP LOGIN PAGE ---");
+            System.out.print("login: ");
+            String login = scanner.nextLine();
+            System.out.print("password: ");
+            String password = scanner.nextLine();
+
+            Admin admin = admins.get(login);
 
             //
             // FIND USERS (Adamdars)
@@ -160,89 +146,45 @@ class LoginMenu {
                 System.out.println(LangManager.get("login_success_admin"));
                 TUIConsole.waitForEnter();
                 printAdminPanel();
-                return;
+            } else {
+                Printer.printError("Login or password incorrect");
             }
 
             Adam adam = adamdar.get(login);
-            if (adam != null && adam.loginTo(password)) {
-                System.out.println("Success!");
-                TUIConsole.waitForEnter();
 
+            if (adam != null && adam.loginTo(password)) {
                 if (adam instanceof Student) {
                     printStudentPanel((Student) adam);
                 } else if (adam instanceof Teacher) {
-                    // printTeacherPanel((Teacher) adam);
-                    printBlankPage();
+                    printTeacherPanel((Teacher) adam);
+                } else if (adam instanceof Manager) {
+                    printManagerPanel((Manager) adam);
+                } else if (adam instanceof Dean) {
+                    printDeanPanel((Dean) adam);
                 }
-
-                return;
             }
 
             System.out.println(LangManager.get("login_wrong_login_or_psw"));
             TUIConsole.waitForEnter();
         }
-
     }
 
     private void printAdminPanel() {
-        while (true) {
-            TUIConsole.clearScreen();
-            Printer.println("=================================");
-            Printer.println("       ADMIN PANEL: " + this.admin.getName().toUpperCase());
-            Printer.println("=================================");
-            Printer.println(" [1]-> Create ADAM");
-            Printer.println(" [2]-> Edit ADAM");
-            Printer.println(" [3]-> Delete ADAM");
-            Printer.println(" [4]-> View ADAM");
-            Printer.println(" [67]-> EXIT");
+        boolean isRunning = true;
 
-            Printer.printAction("\nChoose action: ", false);
+        while (isRunning) {
+            System.out.println("--- ADMIN PANEL: " + this.admin.getName().toUpperCase() + " ---");
+            System.out.println("1: Create ADAM");
+            System.out.println("2: Edit User");
+            System.out.println("3: Delete User");
+            System.out.println("67: EXIT");
 
             String choice = scanner.nextLine().trim();
 
             switch (choice) {
-                case "1" -> {
-                    Printer.debugPrintInfo("-> selected: Create ADAM");
-                    Printer.printInfo("-> selected: Create ADAM");
-                    TUIConsole.waitForEnter();
-                    TUIConsole.clearScreen();
-                    AdamdarCreationRequest arc = new AdamdarCreationRequest(this.admin.getId(), "epta");
-                    Student st = arc.createStudent(scanner);
-                    TUIConsole.waitForEnter();
-                    TUIConsole.clearScreen();
-
-                    if (st != null) {
-                        Map<String, Adam> ada = DataStorage.loadAdamdar();
-                        ada.put(st.getEmail(), st);
-                        DataStorage.saveAdamdar(ada);
-                    }
-                }
-
-                case "2" -> {
-                    Printer.debugPrintInfo("-> selected: Edit ADAM");
-                    TUIConsole.waitForEnter();
-                }
-
-                case "3" -> {
-                    Printer.debugPrintInfo("-> selected: remove ADAM");
-                    // TUIConsole.waitForEnter();
-                    Printer.printAction("Email: ", false);
-                    String email = scanner
-                            .nextLine();
-                    Map<String, Adam> ada = DataStorage.loadAdamdar();
-
-                    if (ada.containsKey(email)) {
-                        ada.remove(email);
-                        DataStorage.saveAdamdar(ada);
-                        Printer.printSucces("Adam war removed...");
-                        TUIConsole.waitForEnter();
-                    } else {
-                        Printer.println("┌────────────────────────────────────────────────────────┐");
-                        Printer.println("│               No Adams found in database               │");
-                        Printer.println("└────────────────────────────────────────────────────────┘");
-                    }
-
-                }
+                case "1":
+                    Printer.printInfo("Create Dean (1) or Manager (2)");
+                    String choid = scanner.nextLine();
 
                 case "4" -> {
                     Printer.debugPrintInfo("-> selected: View ADAM");
@@ -290,103 +232,91 @@ class LoginMenu {
                     return;
                 }
 
-                default -> {
-                    System.out.println("ERROR: Wrong input");
-                    TUIConsole.waitForEnter();
-                }
+                    Printer.printInfo("-> selected: Create User");
+                    break;
+                case "67":
+                    isRunning = false;
+                    Printer.printSucces("Goodbye lol...");
+                default:
+                    Printer.printError("ERROR: wrong input stoopid lol");
             }
         }
     }
 
     private void printStudentPanel(Student student) {
-        while (true) {
-            TUIConsole.clearScreen();
-            Printer.println("=================================");
-            Printer.println("       USER PANEL: " + student.getF_name().toUpperCase());
-            Printer.println("=================================");
-            Printer.println(" [1]-> Student Private Data");
-            Printer.println(" [67]-> EXIT");
+        boolean isRunning = true;
 
-            Printer.printAction("\nChoose action: ", false);
+        while (isRunning) {
+            System.out.println("--- Student PANEL: " + student.getF_name().toUpperCase() + " ---");
+            System.out.println("67: EXIT");
 
             String choice = scanner.nextLine().trim();
 
             switch (choice) {
-                case "1" -> {
-                    Printer.debugPrintInfo("-> selected: Student Private Data");
-                    Printer.printInfo("-> selected: Student Private Data");
-
-                    String fullName = student.getF_name() + " " + student.getL_name();
-                    String email = student.getEmail();
-                    String phone = student.getPhoneNumber();
-                    String birthday = student.getBirthday().toString();
-                    String gender = GENDER.MALE.toString();
-                    String school = SCHOOLS.SITE.toString();
-                    String majorStr = "VTiPO СИЛА";
-
-                    Printer.println("┌──────────────────────────────────────────────────────────────────────────┐");
-                    Printer.println("│                           STUDENT PROFILE                                │");
-                    Printer.println("├──────────────────────────────────────────────────────────────────────────┤");
-
-                    printProfileRow("Full Name", fullName);
-                    printProfileRow("Gender", gender);
-                    printProfileRow("Birth Date", birthday);
-
-                    Printer.println("├──────────────────────────────────────────────────────────────────────────┤");
-
-                    printProfileRow("Email Address", email);
-                    printProfileRow("Phone Number", phone);
-
-                    Printer.println("├──────────────────────────────────────────────────────────────────────────┤");
-
-                    printProfileRow("School / Faculty", school);
-                    printProfileRow("Major / Specialty", majorStr);
-
-                    Printer.println("├──────────────────────────────────────────────────────────────────────────┤");
-
-                    String maskedPassword = "**************" + " (hidden)";
-                    printProfileRow("Account Password", maskedPassword);
-
-                    Printer.println("└──────────────────────────────────────────────────────────────────────────┘");
-
-                    TUIConsole.waitForEnter();
-                }
-
-                case "67" -> {
-                    Printer.debugPrintInfo("-> selected: EXIT");
-                    TUIConsole.waitForEnter();
-                    return;
-                }
-
-                default -> {
-                    System.out.println("ERROR: Wrong input");
-                    TUIConsole.waitForEnter();
-                }
+                case "67":
+                    isRunning = false;
+                    Printer.printSucces("Goodbye lol...");
+                default:
+                    Printer.printError("ERROR: wrong input stoopid lol");
             }
         }
     }
 
-    private static void printProfileRow(String label, String value) {
-        int maxLabelLength = 18;
-        int maxValueLength = 51;
+    private void printTeacherPanel(Teacher teacher) {
+        boolean isRunning = true;
 
-        String truncatedValue = truncate(value, maxValueLength);
+        while (isRunning) {
+            System.out.println("--- Student PANEL: " + teacher.getF_name().toUpperCase() + " ---");
+            System.out.println("67: EXIT");
 
-        String paddedLabel = padRight(label, maxLabelLength);
-        String paddedValue = padRight(truncatedValue, maxValueLength);
+            String choice = scanner.nextLine().trim();
 
-        Printer.println("│ " + paddedLabel + " : " + paddedValue + " │");
+            switch (choice) {
+                case "67":
+                    isRunning = false;
+                    Printer.printSucces("Goodbye lol...");
+                default:
+                    Printer.printError("ERROR: wrong input stoopid lol");
+            }
+        }
     }
 
-    private static String padRight(String text, int length) {
-        if (text.length() >= length) {
-            return text;
-        }
+    private void printManagerPanel(Manager manager) {
+        boolean isRunning = true;
 
-        StringBuilder sb = new StringBuilder(text);
-        while (sb.length() < length) {
-            sb.append(" ");
+        while (isRunning) {
+            System.out.println("--- Student PANEL: " + manager.getF_name().toUpperCase() + " ---");
+            System.out.println("1: ");
+            System.out.println("67: EXIT");
+
+            String choice = scanner.nextLine().trim();
+
+            switch (choice) {
+                case "67":
+                    isRunning = false;
+                    Printer.printSucces("Goodbye lol...");
+                default:
+                    Printer.printError("ERROR: wrong input stoopid lol");
+            }
         }
-        return sb.toString();
+    }
+
+    private void printDeanPanel(Dean dean) {
+        boolean isRunning = true;
+
+        while (isRunning) {
+            System.out.println("--- Student PANEL: " + dean.getF_name().toUpperCase() + " ---");
+            System.out.println("67: EXIT");
+
+            String choice = scanner.nextLine().trim();
+
+            switch (choice) {
+                case "67":
+                    isRunning = false;
+                    Printer.printSucces("Goodbye lol...");
+                default:
+                    Printer.printError("ERROR: wrong input stoopid lol");
+            }
+        }
     }
 }

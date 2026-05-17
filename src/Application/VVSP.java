@@ -8,7 +8,7 @@ import Enums.SCHOOLS;
 
 /**
  * @author Meiramkhan Alinur
- * @version v2
+ * @version v3
  */
 public class VVSP {
 
@@ -49,17 +49,43 @@ class LoginMenu {
         return text.substring(0, length - 3) + "...";
     }
 
+    private void selectLanguageMenu() {
+        TUIConsole.clearScreen();
+        Printer.println("=== SELECT LANGUAGE / ТІЛ ТАНДАУ / ВЫБЕРИТЕ ЯЗЫК ===");
+        Printer.println("1: English");
+        Printer.println("2: Қазақша");
+        Printer.println("3: Русский");
+        Printer.printAction("Choose (1-3): ", false);
+
+        String langChoice = scanner.nextLine().trim();
+        switch (langChoice) {
+            case "1" -> {
+                LangManager.setLanguage("en");
+            }
+            case "2" -> {
+                LangManager.setLanguage("kk");
+            }
+            case "3" -> {
+                LangManager.setLanguage("ru");
+            }
+            default -> {
+                LangManager.setLanguage("kk");
+            }
+        }
+    }
+
     public void show() {
+        selectLanguageMenu();
 
         while (isRunning) {
             TUIConsole.clearScreen();
             Printer.println("=================================");
-            Printer.println("       Wellcome to VVSP          ");
+            Printer.println("       " + LangManager.get("main_title") + "          ");
             Printer.println("=================================");
-            Printer.println(" [1] -> LOGIN");
-            Printer.println(" [2] -> ABOUT");
-            Printer.println(" [67]-> EXIT");
-            Printer.printAction("\nChoose action: ", false);
+            Printer.println(LangManager.get("menu_login"));
+            Printer.println(LangManager.get("menu_about"));
+            Printer.println(LangManager.get("menu_exit"));
+            Printer.printAction(LangManager.get("choose_action"), false);
 
             String choice = scanner.nextLine().trim();
 
@@ -71,13 +97,13 @@ class LoginMenu {
                 case "67":
                     Printer.debugPrintInfo("-> selected: EXIT");
                     isRunning = false;
-                    System.out.println("Goodbye lol...");
+                    System.out.println(LangManager.get("goodbye"));
                     break;
                 case "2":
                     printBlankPage();
                     break;
                 default:
-                    System.out.println("ERROR: Wrong input");
+                    System.out.println(LangManager.get("error_input"));
                     TUIConsole.waitForEnter();
             }
         }
@@ -116,22 +142,22 @@ class LoginMenu {
             Map<String, Adam> adamdar = DataStorage.loadAdamdar();
             TUIConsole.clearScreen();
             Printer.println("=================================");
-            Printer.println("       VVSP: LOGIN PAGE          ");
+            Printer.println("       " + LangManager.get("login_title") + "          ");
             Printer.println("=================================");
-            Printer.println("67 for exit\n");
+            Printer.println(LangManager.get("for_exit") + "\n");
 
-            System.out.print("Login: ");
+            System.out.print(LangManager.get("login_login"));
             String login = scanner.nextLine().trim();
             if (login.equals("67"))
                 return;
 
-            System.out.print("Password: ");
+            System.out.print(LangManager.get("login_password"));
             String password = scanner.nextLine().trim();
 
             Admin currentAdmin = admins.get(login);
             if (currentAdmin != null && currentAdmin.loginTo(password)) {
                 this.admin = currentAdmin;
-                System.out.println("Success (Admin)!");
+                System.out.println(LangManager.get("login_success_admin"));
                 TUIConsole.waitForEnter();
                 printAdminPanel();
                 return;
@@ -152,7 +178,7 @@ class LoginMenu {
                 return;
             }
 
-            System.out.println("Wrong login or password...");
+            System.out.println(LangManager.get("login_wrong_login_or_psw"));
             TUIConsole.waitForEnter();
         }
 
@@ -224,20 +250,23 @@ class LoginMenu {
                     Map<String, Adam> ada = DataStorage.loadAdamdar();
                     if (ada == null || ada.isEmpty()) {
                         Printer.println("┌────────────────────────────────────────────────────────┐");
-                        Printer.println("│               No Adams found in database               │");
+                        Printer.println("│ " + String.format("%-54s", LangManager.get("adam_not_found_in_db")) + " │");
                         Printer.println("└────────────────────────────────────────────────────────┘");
                     } else {
+                        String colName = LangManager.get("name");
+                        String colEmail = LangManager.get("email");
+                        String colRole = LangManager.get("adamdar_role_type");
+
                         Printer.println(
                                 "┌──────────────────────┬─────────────────────────────────┬────────────────────────┐");
-                        Printer.println(
-                                "│ Name                 │ Email                           │ Role / Type            │");
+                        Printer.println(String.format("│ %-20s │ %-31s │ %-22s │", colName, colEmail, colRole));
                         Printer.println(
                                 "├──────────────────────┼─────────────────────────────────┼────────────────────────┤");
 
                         for (Adam adam : ada.values()) {
                             String fullName = adam.getF_name() + " "
-                                    + (adam.getL_name() != null ? adam.getL_name() : "");
-                            String email = adam.getEmail() != null ? adam.getEmail() : "-";
+                                    + adam.getL_name();
+                            String email = adam.getEmail();
                             String role = adam.getClass().getSimpleName();
 
                             String line = String.format("│ %-20s │ %-31s │ %-22s │",
@@ -250,7 +279,7 @@ class LoginMenu {
                         }
                         Printer.println(
                                 "└──────────────────────┴─────────────────────────────────┴────────────────────────┘");
-                        Printer.printInfo("Total users found: " + ada.size() + "\n");
+                        Printer.printInfo(LangManager.get("total_user_found") + ada.size() + "\n");
                     }
 
                     TUIConsole.waitForEnter();

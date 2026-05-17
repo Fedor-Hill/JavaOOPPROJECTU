@@ -341,85 +341,23 @@ class LoginMenu {
         int maxLabelLength = 18;
         int maxValueLength = 51;
 
-        // Обрезаем значение, если оно вдруг длиннее 51 символа
         String truncatedValue = truncate(value, maxValueLength);
 
-        // Вручную дополняем пробелами до нужной длины
         String paddedLabel = padRight(label, maxLabelLength);
         String paddedValue = padRight(truncatedValue, maxValueLength);
 
-        // Собираем строку БЕЗ использования %-51s для этих переменных
         Printer.println("│ " + paddedLabel + " : " + paddedValue + " │");
     }
 
-    // Умный метод дополнени`я пробелами, который учитывает специфику UTF-8
     private static String padRight(String text, int length) {
         if (text.length() >= length) {
             return text;
         }
-        // Вычисляем сколько РЕАЛЬНО пробелов нужно добавить
+
         StringBuilder sb = new StringBuilder(text);
         while (sb.length() < length) {
             sb.append(" ");
         }
         return sb.toString();
-    }
-
-    private void printTeacherPanel(Teacher teacher) {
-        boolean isRunning = true;
-
-        while (isRunning) {
-            System.out.println("--- Student PANEL: " + teacher.getF_name().toUpperCase() + " ---");
-            System.out.println("67: EXIT");
-
-            String choice = scanner.nextLine().trim();
-
-            switch (choice) {
-                case "67":
-                    isRunning = false;
-                    Printer.printSucces("Goodbye lol...");
-                default:
-                    Printer.printError("ERROR: wrong input stoopid lol");
-            }
-        }
-    }
-
-    private void printManagerPanel(Manager manager) {
-        boolean isRunning = true;
-
-        while (isRunning) {
-            System.out.println("--- Student PANEL: " + manager.getF_name().toUpperCase() + " ---");
-            System.out.println("1: ");
-            System.out.println("67: EXIT");
-
-            String choice = scanner.nextLine().trim();
-
-            switch (choice) {
-                case "67":
-                    isRunning = false;
-                    Printer.printSucces("Goodbye lol...");
-                default:
-                    Printer.printError("ERROR: wrong input stoopid lol");
-            }
-        }
-    }
-
-    private void printDeanPanel(Dean dean) {
-        boolean isRunning = true;
-
-        while (isRunning) {
-            System.out.println("--- Student PANEL: " + dean.getF_name().toUpperCase() + " ---");
-            System.out.println("67: EXIT");
-
-            String choice = scanner.nextLine().trim();
-
-            switch (choice) {
-                case "67":
-                    isRunning = false;
-                    Printer.printSucces("Goodbye lol...");
-                default:
-                    Printer.printError("ERROR: wrong input stoopid lol");
-            }
-        }
     }
 }

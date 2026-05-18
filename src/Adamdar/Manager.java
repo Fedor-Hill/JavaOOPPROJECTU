@@ -1,56 +1,212 @@
 package Adamdar;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collections;
+import java.util.Vector;
 
+import AcademicThigns.Subject;
+
+import Application.Printer;
+import Application.Request;
 import Application.RequestHandler;
-import Application.AdamdarCreationRequest;
-import Enums.ACCESS_RIGHT;
-import Enums.GENDER;
 
+import Enums.*;
 
 /**
+ * Manager class
+ * 
  * @author Kim Alina
  */
 public class Manager extends Employee implements RequestHandler {
 
-    /**
-     * Default constructor
-     */
-    public Manager(String f_name, String l_name, String email, String phoneNumber, LocalDate birthday, GENDER gender, String password) {
-        super(f_name, l_name, email, phoneNumber, birthday, gender, phoneNumber, password);
-    }
+        private MANAGER_TYPE type;
 
-    /**
-     * 
-     */
-    private String info;
+        private Vector<ACCESS_RIGHT> accesses;
 
-    /**
-     * 
-     */
-    private List<ACCESS_RIGHT> accesses;
+        /**
+         * Constructor
+         */
+        public Manager(String f_name, String l_name, String email, String phoneNumber, LocalDate birthday,
+                        GENDER gender, String password, MANAGER_TYPE type) {
+                super(f_name, l_name, email, phoneNumber, birthday, gender, password, "Manager");
 
-    public void createAdamRequest() {
-        if (this.accesses.contains(ACCESS_RIGHT.CREATE_STUDENT)) {
-            AdamdarCreationRequest req = new AdamdarCreationRequest(this.getId(), "approve new Student"); 
+                this.type = type;
+
+                this.accesses = new Vector<>();
         }
-    }
 
+        // ===== REGISTRATION =====
 
-    @Override
-    public void viewRequests() {
-        
-    }
+        /**
+         * Approve student registration
+         */
+        public void approveRegistration(Student student,
+                        Subject subject) {
 
-    @Override
-    public void approveRequest() {
-        
-        
-    }
+                student.registerSubject(subject);
 
-    @Override
-    public void rejectRequest() {
-        
-    }
+                Printer.printSucces(
+                                "Registration approved!");
+        }
+
+        /**
+         * Reject registration
+         */
+        public void rejectRegistration(Student student,
+                        Subject subject) {
+
+                Printer.printWarning(
+                                "Registration rejected for "
+                                                + student.getFullName());
+        }
+
+        // ===== SUBJECT MANAGEMENT =====
+
+        /**
+         * Assign subject to teacher
+         */
+        public void assignSubjectToTeacher(Teacher teacher,
+                        Subject subject) {
+
+                teacher.addSubject(subject);
+
+                Printer.printSucces(
+                                "Subject assigned successfully!");
+        }
+
+        /**
+         * Add subject for registration
+         */
+        public void addSubjectForRegistration(Subject subject) {
+
+                Printer.printSucces(
+                                subject.getTitle()
+                                                + " added for registration.");
+        }
+
+        // ===== REPORTS =====
+
+        /**
+         * Create GPA report
+         */
+        public void createPerformanceReport(Vector<Student> students) {
+
+                Printer.printInfo(
+                                "=== PERFORMANCE REPORT ===");
+
+                for (Student s : students) {
+
+                        System.out.println(
+                                        s.getFullName()
+                                                        + " | GPA: "
+                                                        + s.getGpa());
+                }
+        }
+
+        // ===== SORTING =====
+
+        /**
+         * Sort students by GPA
+         */
+        public void sortStudentsByGpa(Vector<Student> students) {
+
+                Collections.sort(students);
+
+                Printer.printSucces(
+                                "Students sorted by GPA!");
+        }
+
+        /**
+         * Sort students alphabetically
+         */
+        public void sortStudentsAlphabetically(
+                        Vector<Student> students) {
+
+                students.sort(
+                                (s1, s2) -> s1.getFullName()
+                                                .compareTo(
+                                                                s2.getFullName()));
+
+                Printer.printSucces(
+                                "Students sorted alphabetically!");
+        }
+
+        // ===== REQUESTS =====
+
+        @Override
+        public void viewRequests() {
+
+                if (getRequests().isEmpty()) {
+
+                        Printer.printWarning(
+                                        "No requests.");
+
+                        return;
+                }
+
+                for (Request r : getRequests()) {
+                        System.out.println(r);
+                }
+        }
+
+        @Override
+        public void approveRequest() {
+
+                if (getRequests().isEmpty()) {
+
+                        Printer.printWarning(
+                                        "No requests.");
+
+                        return;
+                }
+
+                Request request = getRequests().get(0);
+
+                request.setStatus(
+                                REQUEST_STATUS.APPROVED);
+
+                Printer.printSucces(
+                                "Request approved!");
+        }
+
+        @Override
+        public void rejectRequest() {
+
+                if (getRequests().isEmpty()) {
+
+                        Printer.printWarning(
+                                        "No requests.");
+
+                        return;
+                }
+
+                Request request = getRequests().get(0);
+
+                request.setStatus(
+                                REQUEST_STATUS.REJECTED);
+
+                Printer.printSucces(
+                                "Request rejected!");
+        }
+
+        // ===== GETTERS =====
+
+        public MANAGER_TYPE getType() {
+                return type;
+        }
+
+        public Vector<ACCESS_RIGHT> getAccesses() {
+                return accesses;
+        }
+
+        // ===== OBJECT METHODS =====
+
+        @Override
+        public String toString() {
+
+                return "Manager: "
+                                + getFullName()
+                                + " | Type: "
+                                + type;
+        }
 }

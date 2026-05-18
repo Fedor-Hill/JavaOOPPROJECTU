@@ -6,6 +6,7 @@ import java.util.*;
 import Application.Printer;
 import Enums.ACCESS_RIGHT;
 import Enums.GENDER;
+import Enums.MANAGER_TYPE;
 import Enums.SCHOOLS;
 
 /**
@@ -67,7 +68,7 @@ public class Admin extends Eva {
                 Printer.printSucces("### --- Password --- ###");
                 String password = scanner.nextLine();
 
-                m = new Manager(f_name, l_name, email, phoneNumber, birthday, gender, password);
+                m = new Manager(f_name, l_name, email, phoneNumber, birthday, gender, password, MANAGER_TYPE.ADMINISTRATION);
             } catch (Exception e) {
                 Printer.printError("Error while creating MANAGER: " + e.toString());
             }

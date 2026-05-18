@@ -6,6 +6,7 @@ import Application.IdGenerator;
 import java.io.Serializable;
 
 import java.time.*;
+import java.util.Objects;
 
 /**
  * @author Kim Alina
@@ -16,7 +17,8 @@ public abstract class Adam implements Serializable {
     /**
      * Default constructor
      */
-    public Adam(String f_name, String l_name, String email, String phoneNumber, LocalDate birthday, GENDER gender, String password) {
+    public Adam(String f_name, String l_name, String email, String phoneNumber, LocalDate birthday, GENDER gender,
+            String password) {
         this.f_name = f_name;
         this.l_name = l_name;
         this.email = email;
@@ -24,7 +26,7 @@ public abstract class Adam implements Serializable {
         this.phoneNumber = phoneNumber;
 
         this.id = IdGenerator.generateStudentId();
-        this.password = password; 
+        this.password = password;
     }
 
     /**
@@ -62,51 +64,96 @@ public abstract class Adam implements Serializable {
      */
     private GENDER gender;
 
-    private String password; 
+    private String password;
 
+    /**
+     * Authentication
+     */
     public boolean loginTo(String password) {
         return this.password.equals(password);
-    };
-
-    /**
-     * @return String
-     */
-    public String getId() {
-        return this.id;
     }
 
     /**
-     * TODO: UDPDATE
-     * 
-     * @return int
+     * Get full name
+     */
+    public String getFullName() {
+        return f_name + " " + l_name;
+    }
+
+    /**
+     * Calculate real age
      */
     public int getAge() {
-
-        return 19;
+        return Period.between(birthday, LocalDate.now()).getYears();
     }
 
-    public LocalDate getBirthday() {
-        return birthday;
-    }
+    // ===== GETTERS =====
 
-    public String getEmail() {
-        return email;
+    public String getId() {
+        return id;
     }
 
     public String getF_name() {
         return f_name;
     }
 
-    public GENDER getGender() {
-        return gender;
-    }
-
     public String getL_name() {
         return l_name;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public String getPhoneNumber() {
         return phoneNumber;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public GENDER getGender() {
+        return gender;
+    }
+
+    // ===== SETTERS =====
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    // ===== OBJECT METHODS =====
+
+    @Override
+    public String toString() {
+        return "ID: " + id +
+                " | Name: " + getFullName() +
+                " | Email: " + email;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+
+        if (!(o instanceof Adam adam))
+            return false;
+
+        return Objects.equals(id, adam.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
 }

@@ -17,4 +17,8 @@ public class Request implements Serializable {
         this.description = description;
         this.status = REQUEST_STATUS.PENDING;
     }
+
+    public void setStatus(REQUEST_STATUS status) {
+        this.status = status; 
+    }
 }

@@ -3,32 +3,34 @@ package AcademicThigns;
 import java.io.Serializable;
 import java.util.Objects;
 
+import Enums.MAJOR;
+
 /**
  * @author Azimbay Zhanel
  */
 public class Major implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private MAJOR name;
     private String title;
     private double yearOfStudy;
 
     public Major() {
-        this("", "", 1);
+        this(MAJOR.VTiPO, "", 1);
     }
 
-    public Major(String id, String title, double yearOfStudy) {
-        this.id = id;
+    public Major(MAJOR name, String title, double yearOfStudy) {
+        this.name = name; 
         this.title = title;
         this.yearOfStudy = yearOfStudy;
     }
 
-    public String getId() {
-        return id;
+    public MAJOR getName() {
+        return name;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setName(MAJOR name) {
+        this.name = name;
     }
 
     public String getTitle() {
@@ -49,7 +51,7 @@ public class Major implements Serializable {
 
     @Override
     public String toString() {
-        return title + " (" + id + "), year " + yearOfStudy;
+        return title + " (" + name.getTranslatedName() + "), year " + yearOfStudy;
     }
 
     @Override
@@ -61,11 +63,11 @@ public class Major implements Serializable {
             return false;
         }
         Major other = (Major) obj;
-        return Objects.equals(id, other.id);
+        return Objects.equals(name, other.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(name);
     }
 }

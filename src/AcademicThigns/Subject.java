@@ -21,6 +21,8 @@ public class Subject implements Serializable {
     private List<String> prerequisite;
     private LessonType lessonType;
     private List<ScheduleSlot> schedule;
+    private List<Lesson> lessons;
+    private int intendedYear;
 
     public Subject() {
         this("", "", 0, LessonType.LECTURE);
@@ -35,6 +37,8 @@ public class Subject implements Serializable {
         this.acceptableMajors = new ArrayList<>();
         this.prerequisite = new ArrayList<>();
         this.schedule = new ArrayList<>();
+        this.lessons = new ArrayList<>();
+        this.intendedYear = 0;
     }
 
     public String getId() {
@@ -101,6 +105,22 @@ public class Subject implements Serializable {
         this.schedule = schedule == null ? new ArrayList<>() : new ArrayList<>(schedule);
     }
 
+    public List<Lesson> getLessons() {
+        return lessons;
+    }
+
+    public void setLessons(List<Lesson> lessons) {
+        this.lessons = lessons == null ? new ArrayList<>() : new ArrayList<>(lessons);
+    }
+
+    public int getIntendedYear() {
+        return intendedYear;
+    }
+
+    public void setIntendedYear(int intendedYear) {
+        this.intendedYear = intendedYear;
+    }
+
     public void addTeacher(Teacher teacher) {
         if (teacher != null && !teachers.contains(teacher)) {
             teachers.add(teacher);
@@ -108,13 +128,14 @@ public class Subject implements Serializable {
     }
 
     public void addAcceptableMajor(String majorTitle) {
-        if (majorTitle != null && !majorTitle.isBlank() && !acceptableMajors.contains(majorTitle)) {
+        if (majorTitle != null && !majorTitle.trim().isEmpty() && !acceptableMajors.contains(majorTitle)) {
             acceptableMajors.add(majorTitle);
         }
     }
 
     public void addPrerequisite(String prerequisiteSubjectId) {
-        if (prerequisiteSubjectId != null && !prerequisiteSubjectId.isBlank() && !prerequisite.contains(prerequisiteSubjectId)) {
+        if (prerequisiteSubjectId != null && !prerequisiteSubjectId.trim().isEmpty()
+                && !prerequisite.contains(prerequisiteSubjectId)) {
             prerequisite.add(prerequisiteSubjectId);
         }
     }
@@ -125,11 +146,17 @@ public class Subject implements Serializable {
         }
     }
 
+    public void addLesson(Lesson lesson) {
+        if (lesson != null) {
+            lessons.add(lesson);
+        }
+    }
+
     public boolean isAvailableForMajor(Major major) {
         if (major == null || acceptableMajors.isEmpty()) {
             return true;
         }
-        return acceptableMajors.contains(major.getTitle()) || acceptableMajors.contains(major.getId());
+        return acceptableMajors.contains(major.getTitle()) || acceptableMajors.contains(major.getTitle());
     }
 
     @Override

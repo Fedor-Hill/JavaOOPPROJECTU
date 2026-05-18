@@ -222,21 +222,31 @@ public class Student extends Adam implements Researcher, Comparable<Student> {
      */
     public double calculateGpa() {
 
-        if (transcript.isEmpty()) {
+        if (transcript == null || transcript.isEmpty()) {
+            this.gpa = 0.0;
             return 0.0;
         }
 
-        double total = 0;
+        double totalGradePoints = 0.0;
+        int totalCredits = 0;
 
         for (Enrollment e : transcript) {
+            int courseCredits = e.getTakedSubject().getCredits();
 
-            total += e.getAttestation()
-                    .getDigitGrade();
+            double digitGrade = e.getAttestation().getDigitGrade();
+
+            totalGradePoints += digitGrade * courseCredits;
+
+            totalCredits += courseCredits;
         }
 
-        gpa = total / transcript.size();
+        if (totalCredits == 0) {
+            this.gpa = 0.0;
+        } else {
+            this.gpa = totalGradePoints / totalCredits;
+        }
 
-        return gpa;
+        return this.gpa;
     }
 
     // ===== TEACHERS =====
@@ -360,7 +370,7 @@ public class Student extends Adam implements Researcher, Comparable<Student> {
                 + getFullName()
                 + " | Program: "
                 + program
-                + " | GPA: "
+                + " | Total score: "
                 + String.format("%.2f", getGpa());
     }
 }

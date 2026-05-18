@@ -142,7 +142,7 @@ public class Teacher extends Employee implements Researcher {
                         firstAttestation,
                         secondAttestation,
                         finalExam),
-                "FALL",
+                "SPRING",
                 2026);
 
         student.addEnrollment(enrollment);

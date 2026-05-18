@@ -1,30 +1,30 @@
 ### Work Status
-###### (*Application - Diagrams - Documentation*)  - **Meiramkhan Alinur** - In work 
-- [ ] Work Demo 
-- [ ] Check that Draft Demo is work 
-- [ ] Done Diagrams
-- [ ] Use Case 
-- [ ] Documentation and other papers papers 
-- [ ] Check Requirements 
-- [ ] Report Generator 
-- [ ] TUI
+###### (*Application - Diagrams - Documentation*)  - **Meiramkhan Alinur** - Done
+- [x] Work Demo 
+- [x] Check that Draft Demo is work 
+- [x] Done Diagrams
+- [x] Use Case 
+- [x] Documentation and other papers papers 
+- [x] Check Requirements 
+- [x] Report Generator 
+- [x] TUI
 
-###### *Adamdar* - **Alina Kim** - In work
+###### *Adamdar* - **Alina Kim** - Done
 - [x] Adam and Eva
-- [ ] Sub classes (Teacher, Manager, Student and etc)
-- [ ] idk
+- [x] Sub classes (Teacher, Manager, Student, Proctor and etc)
+- [x] idk
 
-###### *AcademicThings* - **Azimbay Zhanel** - In work
-- [ ] Write classes
-- [ ] Add Lesson Type 
-- [ ] Add schedule 
-- [ ] update your diagram view
+###### *AcademicThings* - **Azimbay Zhanel** - Done
+- [x] Write classes
+- [x] Add Lesson Type 
+- [x] Add schedule 
+- [x] update your diagram view
 
-###### *Research* - **Alazab Alaa** - In work
-- [ ] Write classes 
-- [ ] Fills fields for researcher papers https://ieeexplore.ieee.org/document/9766691 . Take 5-10 important ones, citations, name, authors, journal, pages, date , doi etc.
-- [ ] Add comparator that prints his research papers in sorted order, dictated by the comparator - by date published or by citations or by the article length (use pages).
-- [ ] Print ALLLL PAPERS 
+###### *Research* - **Alazab Alaa** - Done
+- [x] Write classes 
+- [x] Fills fields for researcher papers https://ieeexplore.ieee.org/document/9766691 . Take 5-10 important ones, citations, name, authors, journal, pages, date , doi etc.
+- [x] Add comparator that prints his research papers in sorted order, dictated by the comparator - by date published or by citations or by the article length (use pages).
+- [x] Print ALLLL PAPERS 
 
 
 ---
@@ -33,46 +33,72 @@
 ## Project Structure
 
 ```text
-.
-├── README.md
-├── UMLka.mdj
-└── src/
-    ├── AcademicThigns/
-    │   ├── Attestation.java
-    │   ├── Enrollment.java
-    │   ├── Major.java
-    │   └── Subject.java
-    ├── Adamdar/
-    │   ├── Adam.java
-    │   ├── Admin.java
-    │   ├── Dean.java
-    │   ├── Employee.java
-    │   ├── Eva.java
-    │   ├── Manager.java
-    │   ├── Student.java
-    │   └── Teacher.java
-    ├── Application/
-    │   ├── AdminPanel.java
-    │   ├── DataStorage.java
-    │   ├── IdGenerator.java
-    │   ├── LoginMenu.java
-    │   ├── Main.java
-    │   ├── Printer.java
-    │   ├── Request.java
-    │   ├── RequestHandler.java
-    │   ├── VVSP.java
-    │   └── Window.java
-    ├── Enums/
-    │   ├── ACCESS_RIGHT.java
-    │   ├── GENDER.java
-    │   ├── PROGRAMS.java
-    │   ├── REQUEST_STATUS.java
-    │   ├── SCHOOLS.java
-    │   ├── STATUS.java
-    │   └── TEACHER_LVL.java
-    └── Research/
-        ├── ResearchDELO.java
-        ├── ResearchPaper.java
-        ├── ResearchProject.java
-        └── Researcher.java
+src/
+├── 🎓 AcademicThigns/          
+│   ├── Attestation.java
+│   ├── Course.java
+│   ├── Enrollment.java
+│   ├── Lesson.java
+│   ├── LessonType.java
+│   ├── Major.java
+│   ├── Mark.java
+│   ├── Room.java
+│   ├── ScheduledLesson.java
+│   └── Subject.java
+├── 👥 Adamdar/                 
+│   ├── Adam.java               
+│   ├── Employee.java
+│   ├── Student.java
+│   ├── Teacher.java
+│   ├── Admin.java
+│   ├── Dean.java
+│   ├── Manager.java
+│   ├── Proctor.java
+│   └── Eva.java
+├── ⚙️ Application/             
+│   ├── DataStorage.java        
+│   ├── IdGenerator.java
+│   ├── LangManager.java        
+│   ├── Printer.java
+│   ├── TUIConsole.java         
+│   ├── Main.java
+│   ├── VVSP.java
+│   ├── LoginMenu.class         
+│   ├── Request.java            
+│   ├── RequestHandler.java
+│   ├── AdamdarCreationRequest.java
+│   └── SubjectRegistrationManager.java
+├── 📊 Enums/                   
+│   ├── ACCESS_RIGHT.java
+│   ├── COMPLAINT_PRIORITY.java
+│   ├── COMPLAINT_STATUS.java
+│   ├── GENDER.java
+│   ├── MAJOR.java
+│   ├── MANAGER_TYPE.java
+│   ├── MESSAGE_TYPE.java
+│   ├── PROGRAMS.java
+│   ├── REQUEST_STATUS.java
+│   ├── RoomType.java
+│   ├── SCHOOLS.java
+│   ├── STATUS.java
+│   └── TEACHER_LVL.java
+├── ⚠️ Exceptions/              
+│   ├── CourseRegistrationException.java
+│   ├── CreditLimitExceededException.java
+│   ├── NotResearcherException.java
+│   ├── ScheduleConflictException.java
+│   └── SupervisorQualificationException.java
+├── 🔬 Research/                
+│   ├── Researcher.java         
+│   ├── ResearchPaper.java      
+│   ├── ResearchProject.java    
+│   ├── ResearchDELO.java
+│   ├── AdvancedSearch.java
+│   ├── RecommendationLetter.java
+│   ├── Startup.java
+│   └── researchcomparator.java 
+└── 🌐 resources/               
+    ├── label_en.properties     
+    ├── label_kk.properties     
+    └── label_ru.properties     
 ``` 

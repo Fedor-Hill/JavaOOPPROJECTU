@@ -6,6 +6,9 @@ import Enums.*;
 import Research.ResearchDELO;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 /**
@@ -193,6 +196,25 @@ public class Student extends Adam implements Researcher, Comparable<Student> {
                             + e.getAttestation()
                                     .getDigitGrade());
         }
+    }
+
+    /**
+     * View shedule
+     */
+    public List<ScheduledLesson> getMySchedule(Map<String, ScheduledLesson> globalSchedule) {
+        List<ScheduledLesson> mySchedule = new ArrayList<>();
+
+        if (this.registeredSubjects == null || this.registeredSubjects.isEmpty()) {
+            return mySchedule;
+        }
+
+        for (ScheduledLesson lesson : globalSchedule.values()) {
+            if (this.registeredSubjects.contains(lesson.getCourse())) {
+                mySchedule.add(lesson);
+            }
+        }
+
+        return mySchedule;
     }
 
     /**

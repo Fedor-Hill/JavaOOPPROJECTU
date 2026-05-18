@@ -1,8 +1,10 @@
 package Adamdar;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
+import Application.LangManager;
 import Application.Printer;
 import Enums.ACCESS_RIGHT;
 import Enums.GENDER;
@@ -30,105 +32,124 @@ public class Admin extends Eva {
         return accesses;
     }
 
-    public Manager createManager() {
-        Scanner scanner = new Scanner(System.in);
+    public Manager createManager(Scanner scanner) {
+        try {
+            Printer.println("\n--- " + LangManager.get("manager_creation_header") + " ---");
 
-        Manager m = null;
+            Printer.printAction("First name: ", false);
+            String f_name = scanner.nextLine();
 
-        while (true) {
-            try {
-                Printer.printInfo("### --- f_name --- ###");
-                String f_name = scanner.nextLine();
-                Printer.printInfo("### --- l_name --- ###");
-                String l_name = scanner.nextLine();
-                Printer.printInfo("### --- email --- ###");
-                String email = scanner.nextLine();
-                Printer.printInfo("### --- phoneNumber --- ###");
-                String phoneNumber = scanner.nextLine();
-                Printer.printInfo("### --- birthday --- ###");
-                System.out.print("Year: ");
-                int year = scanner.nextInt();
-                System.out.print("\nMonth: ");
-                int month = scanner.nextInt();
-                System.out.println("\nday: ");
-                int day = scanner.nextInt();
-                LocalDate birthday = LocalDate.of(year, month, day);
-                System.out.println();
-                Printer.printSucces("### --- Gender (Male or Female) --- ###");
-                String genderStr = scanner.nextLine();
+            Printer.printAction("Last name: ", false);
+            String l_name = scanner.nextLine();
 
-                GENDER gender;
+            Printer.printAction("Email: ", false);
+            String email = scanner.nextLine();
 
-                if (genderStr.contains("female")) {
-                    gender = GENDER.FEMALE;
-                } else {
-                    gender = GENDER.MALE;
+            Printer.printAction("Phone number: ", false);
+            String phoneNumber = scanner.nextLine();
+
+            LocalDate birthday = null;
+            while (birthday == null) {
+                try {
+                    Printer.printInfo("Birth date (YYYY-MM-DD): ");
+                    birthday = LocalDate.parse(scanner.nextLine().trim());
+                } catch (DateTimeParseException e) {
+                    Printer.println("Invalid date format. Please use YYYY-MM-DD.");
                 }
-
-                Printer.printSucces("### --- Password --- ###");
-                String password = scanner.nextLine();
-
-                m = new Manager(f_name, l_name, email, phoneNumber, birthday, gender, password, MANAGER_TYPE.ADMINISTRATION);
-            } catch (Exception e) {
-                Printer.printError("Error while creating MANAGER: " + e.toString());
             }
 
-            break;
-        }
-        scanner.close();
+            GENDER gender = null;
+            while (gender == null) {
+                try {
+                    Printer.printInfo("Gender (MALE/FEMALE): ");
+                    gender = GENDER.valueOf(scanner.nextLine().toUpperCase().trim());
+                } catch (IllegalArgumentException e) {
+                    Printer.println("Invalid gender. Please enter MALE or FEMALE.");
+                }
+            }
 
-        return m;
+            Printer.printInfo("Password: ");
+            String password = scanner.nextLine();
+
+            Manager m = new Manager(f_name, l_name, email, phoneNumber, birthday, gender, password,
+                    MANAGER_TYPE.OR);
+            Printer.printSucces("Manager was created successfully!");
+            return m;
+
+        } catch (Exception e) {
+            Printer.printError("Error while creating MANAGER: " + e.getMessage());
+            return null;
+        }
     }
 
-    public Dean createDean() {
-        Scanner scanner = new Scanner(System.in);
+    public Dean createDean(Scanner scanner) {
+        try {
+            Printer.println("\n--- " + LangManager.get("dean_creation_header") + " ---");
 
-        Dean d = null;
+            Printer.printAction("First name: ", false);
+            String f_name = scanner.nextLine();
 
-        while (true) {
-            try {
-                Printer.printInfo("### --- f_name --- ###");
-                String f_name = scanner.nextLine();
-                Printer.printInfo("### --- l_name --- ###");
-                String l_name = scanner.nextLine();
-                Printer.printInfo("### --- email --- ###");
-                String email = scanner.nextLine();
-                Printer.printInfo("### --- phoneNumber --- ###");
-                String phoneNumber = scanner.nextLine();
-                Printer.printInfo("### --- birthday --- ###");
-                System.out.print("Year: ");
-                int year = scanner.nextInt();
-                System.out.print("\nMonth: ");
-                int month = scanner.nextInt();
-                System.out.println("\nday: ");
-                int day = scanner.nextInt();
-                LocalDate birthday = LocalDate.of(year, month, day);
-                System.out.println();
-                Printer.printSucces("### --- Gender (Male or Female) --- ###");
-                String genderStr = scanner.nextLine();
+            Printer.printAction("Last name: ", false);
+            String l_name = scanner.nextLine();
 
-                GENDER gender;
+            Printer.printAction("Email: ", false);
+            String email = scanner.nextLine();
 
-                if (genderStr.contains("female")) {
-                    gender = GENDER.FEMALE;
-                } else {
-                    gender = GENDER.MALE;
+            Printer.printAction("Phone number: ", false);
+            String phoneNumber = scanner.nextLine();
+
+            LocalDate birthday = null;
+            while (birthday == null) {
+                try {
+                    Printer.printInfo("Birth date (YYYY-MM-DD): ");
+                    birthday = LocalDate.parse(scanner.nextLine().trim());
+                } catch (DateTimeParseException e) {
+                    Printer.println("Invalid date format. Please use YYYY-MM-DD.");
                 }
-
-                Printer.printSucces("### --- Password --- ###");
-                String password = scanner.nextLine();
-
-                SCHOOLS school = SCHOOLS.SITE;
-
-                d = new Dean(f_name, l_name, email, phoneNumber, birthday, gender, password, school);
-            } catch (Exception e) {
-                Printer.printError("Error while creating DEAN: " + e.toString());
             }
 
-            break;
-        }
-        scanner.close();
+            GENDER gender = null;
+            while (gender == null) {
+                try {
+                    Printer.printInfo("Gender (MALE/FEMALE): ");
+                    gender = GENDER.valueOf(scanner.nextLine().toUpperCase().trim());
+                } catch (IllegalArgumentException e) {
+                    Printer.println("Invalid gender. Please enter MALE or FEMALE.");
+                }
+            }
 
-        return d;
+            Printer.printInfo("Password: ");
+            String password = scanner.nextLine();
+
+            SCHOOLS school = chooseSchool(scanner);
+
+            Dean d = new Dean(f_name, l_name, email, phoneNumber, birthday, gender, password, school);
+            Printer.printSucces("Dean was created successfully!");
+            return d;
+
+        } catch (Exception e) {
+            Printer.printError("Error while creating DEAN: " + e.getMessage());
+            return null;
+        }
+    }
+
+    private SCHOOLS chooseSchool(Scanner scanner) {
+        while (true) {
+            Printer.println("\n=== SELECT DEAN'S SCHOOL ===");
+            SCHOOLS[] schools = SCHOOLS.values();
+            for (int i = 0; i < schools.length; i++) {
+                Printer.println(String.format(" [%d] -> %s", (i + 1), schools[i].name()));
+            }
+            Printer.printAction("Choose action: ", false);
+            try {
+                int choice = Integer.parseInt(scanner.nextLine().trim());
+                if (choice >= 1 && choice <= schools.length) {
+                    return schools[choice - 1];
+                }
+                Printer.println("Invalid option. Try again.");
+            } catch (NumberFormatException e) {
+                Printer.println("Invalid input. Please enter a number.");
+            }
+        }
     }
 }

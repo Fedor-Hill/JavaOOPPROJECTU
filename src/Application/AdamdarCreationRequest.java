@@ -13,6 +13,12 @@ import Enums.SCHOOLS;
 
 public class AdamdarCreationRequest extends Request {
 
+    private Student student;
+
+    public Student getStudent() {
+        return student;
+    }
+
     public AdamdarCreationRequest(String adamId, String description) {
         super(adamId, description);
 
@@ -59,18 +65,19 @@ public class AdamdarCreationRequest extends Request {
             Printer.printInfo("Password: ");
             String password = scanner.nextLine();
 
-            MAJOR selectedMajorEnum = chooseMajor(scanner);
+            SCHOOLS school = chooseSchool(scanner);
+            PROGRAMS program = chooseProgram(scanner);
+
+            MAJOR selectedMajorEnum = chooseMajor(scanner, school, program);
+
             int yearOfStudy = chooseYearOfStudy(scanner);
             Major major = new Major(selectedMajorEnum, selectedMajorEnum.getTranslatedName(), yearOfStudy);
-
-            SCHOOLS school = chooseSchool(scanner);
-
-            PROGRAMS program = chooseProgram(scanner);
 
             Student st = new Student(f_name, l_name, email, phoneNumber, birthday, gender, password, major, school,
                     program);
 
             Printer.printSucces("Student was created !");
+            this.student = st;
             return st;
 
         } catch (Exception e) {
@@ -79,13 +86,27 @@ public class AdamdarCreationRequest extends Request {
         }
     }
 
-    private MAJOR chooseMajor(Scanner scanner) {
+    private MAJOR chooseMajor(Scanner scanner, SCHOOLS selectedSchool, PROGRAMS selectedProgram) {
         while (true) {
             Printer.println("\n" + LangManager.get("choose_major_title"));
 
-            MAJOR[] majors = MAJOR.values();
-            for (int i = 0; i < majors.length; i++) {
-                Printer.println(String.format(" [%d] -> %s", (i + 1), majors[i].getTranslatedName()));
+            MAJOR[] allMajors = MAJOR.values();
+            List<MAJOR> availableMajors = new ArrayList<>();
+
+            for (MAJOR m : allMajors) {
+                if (m.getSchool() == selectedSchool && m.getDegreeLevel() == selectedProgram) {
+                    availableMajors.add(m);
+                }
+            }
+
+            if (availableMajors.isEmpty()) {
+                Printer.printWarning(String.format("No majors available for school %s at %s level.",
+                        selectedSchool.name(), selectedProgram.name()));
+                return null;
+            }
+
+            for (int i = 0; i < availableMajors.size(); i++) {
+                Printer.println(String.format(" [%d] -> %s", (i + 1), availableMajors.get(i).getTranslatedName()));
             }
 
             Printer.printAction(LangManager.get("choose_action"), false);
@@ -93,8 +114,8 @@ public class AdamdarCreationRequest extends Request {
 
             try {
                 int choice = Integer.parseInt(input);
-                if (choice >= 1 && choice <= majors.length) {
-                    return majors[choice - 1];
+                if (choice >= 1 && choice <= availableMajors.size()) {
+                    return availableMajors.get(choice - 1); 
                 } else {
                     Printer.println(LangManager.get("error_input"));
                 }

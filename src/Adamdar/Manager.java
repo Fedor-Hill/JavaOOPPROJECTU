@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Vector;
 
 import AcademicThigns.Subject;
-
+import Application.AdamdarCreationRequest;
 import Application.Printer;
 import Application.Request;
 import Application.RequestHandler;
@@ -153,40 +153,60 @@ public class Manager extends Employee implements RequestHandler {
         public void approveRequest() {
 
                 if (getRequests().isEmpty()) {
-
-                        Printer.printWarning(
-                                        "No requests.");
-
+                        Printer.printWarning("No requests to approve.");
                         return;
                 }
 
-                Request request = getRequests().get(0);
+                Request requestToApprove = null;
 
-                request.setStatus(
-                                REQUEST_STATUS.APPROVED);
+                for (int i = 0; i < getRequests().size(); i++) {
+                        Request r = getRequests().get(i);
 
-                Printer.printSucces(
-                                "Request approved!");
+                        if (!(r instanceof AdamdarCreationRequest)) {
+                                requestToApprove = r;
+                                break;
+                        }
+                }
+
+                if (requestToApprove == null) {
+                        Printer.printWarning(
+                                        "All pending requests are Student Registration profiles awaiting the Dean's approval.");
+                        Printer.printInfo("Manager cannot process these files.");
+                        return;
+                }
+
+                requestToApprove.setStatus(Enums.REQUEST_STATUS.APPROVED);
+                Printer.printSucces("Request successfully approved by Manager!");
         }
 
         @Override
         public void rejectRequest() {
 
                 if (getRequests().isEmpty()) {
-
-                        Printer.printWarning(
-                                        "No requests.");
-
+                        Printer.printWarning("No requests to approve.");
                         return;
                 }
 
-                Request request = getRequests().get(0);
+                Request requestToApprove = null;
 
-                request.setStatus(
-                                REQUEST_STATUS.REJECTED);
+                for (int i = 0; i < getRequests().size(); i++) {
+                        Request r = getRequests().get(i);
 
-                Printer.printSucces(
-                                "Request rejected!");
+                        if (!(r instanceof AdamdarCreationRequest)) {
+                                requestToApprove = r;
+                                break;
+                        }
+                }
+
+                if (requestToApprove == null) {
+                        Printer.printWarning(
+                                        "All pending requests are Student Registration profiles awaiting the Dean's approval.");
+                        Printer.printInfo("Manager cannot process these files.");
+                        return;
+                }
+
+                requestToApprove.setStatus(Enums.REQUEST_STATUS.REJECTED);
+                Printer.printSucces("Request successfully approved by Manager!");
         }
 
         // ===== GETTERS =====

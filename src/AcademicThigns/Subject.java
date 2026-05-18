@@ -1,6 +1,7 @@
 package AcademicThigns;
 
 import Adamdar.Teacher;
+import Enums.MAJOR;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class Subject implements Serializable {
     private String title;
     private List<Teacher> teachers;
     private int credits;
-    private List<String> acceptableMajors;
+    private List<MAJOR> acceptableMajors;
     private List<String> prerequisite;
     private LessonType lessonType;
     private List<ScheduleSlot> schedule;
@@ -73,11 +74,11 @@ public class Subject implements Serializable {
         this.credits = credits;
     }
 
-    public List<String> getAcceptableMajors() {
+    public List<MAJOR> getAcceptableMajors() {
         return acceptableMajors;
     }
 
-    public void setAcceptableMajors(List<String> acceptableMajors) {
+    public void setAcceptableMajors(List<MAJOR> acceptableMajors) {
         this.acceptableMajors = acceptableMajors == null ? new ArrayList<>() : new ArrayList<>(acceptableMajors);
     }
 
@@ -127,10 +128,8 @@ public class Subject implements Serializable {
         }
     }
 
-    public void addAcceptableMajor(String majorTitle) {
-        if (majorTitle != null && !majorTitle.trim().isEmpty() && !acceptableMajors.contains(majorTitle)) {
-            acceptableMajors.add(majorTitle);
-        }
+    public void addAcceptableMajor(MAJOR majorTitle) {
+        this.acceptableMajors = acceptableMajors == null ? new ArrayList<>() : new ArrayList<>(acceptableMajors);
     }
 
     public void addPrerequisite(String prerequisiteSubjectId) {
@@ -153,10 +152,16 @@ public class Subject implements Serializable {
     }
 
     public boolean isAvailableForMajor(Major major) {
-        if (major == null || acceptableMajors.isEmpty()) {
+        if (acceptableMajors == null || acceptableMajors.isEmpty()) {
             return true;
         }
-        return acceptableMajors.contains(major.getTitle()) || acceptableMajors.contains(major.getTitle());
+        if (major == null) {
+            return false;
+        }
+        
+        Enums.MAJOR studentMajorEnum = major.getName(); 
+        
+        return acceptableMajors.contains(studentMajorEnum);
     }
 
     @Override

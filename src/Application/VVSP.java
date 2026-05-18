@@ -1,25 +1,125 @@
 package Application;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 
 import AcademicThigns.LessonType;
+import AcademicThigns.Major;
+import AcademicThigns.Room;
+import AcademicThigns.ScheduleSlot;
 import AcademicThigns.ScheduledLesson;
 import AcademicThigns.Subject;
 import Adamdar.*;
 import Enums.GENDER;
+import Enums.MAJOR;
 import Enums.PROGRAMS;
+import Enums.RoomType;
 import Enums.SCHOOLS;
+import Enums.TEACHER_LVL;
 
 /**
  * @author Meiramkhan Alinur
- * @version v4
+ * @version v5
  */
 public class VVSP {
 
     public List<Student> spisok;
 
     public static void executeVVSP() {
+        Map<String, Subject> subjectsCatalog = new HashMap<>();
+
+        Subject oop = new Subject("CSCI2106", "Object-Oriented Programming", 3, LessonType.LECTURE);
+        oop.addAcceptableMajor(MAJOR.VTiPO);
+        oop.addAcceptableMajor(MAJOR.IS);
+        subjectsCatalog.put(oop.getId(), oop);
+
+        Subject ads = new Subject("CS201", "Algorithms and Data Structures", 4, LessonType.LECTURE);
+        ads.addAcceptableMajor(MAJOR.VTiPO);
+        subjectsCatalog.put(ads.getId(), ads);
+
+        Subject bigData = new Subject("DS501", "Big Data Analytics", 4, LessonType.LECTURE);
+        bigData.addAcceptableMajor(MAJOR.IS);
+        subjectsCatalog.put(bigData.getId(), bigData);
+
+        DataStorage.saveSubjects(subjectsCatalog);
+        System.out.println("[DEBUG] Каталог предметов успешно перезаписан!");
+
+        ScheduleSlot oopLectureSlot = new ScheduleSlot(
+                DayOfWeek.MONDAY,
+                LocalTime.of(9, 0),
+                LocalTime.of(11, 0),
+                "446");
+
+        ScheduledLesson oopLecture = new ScheduledLesson(
+                "L_CSCI2106",
+                oop,
+                null,
+                LessonType.LECTURE,
+                oopLectureSlot,
+                null);
+
+        Map<String, Adam> adamdarMap = DataStorage.loadAdamdar();
+        if (adamdarMap == null) {
+            adamdarMap = new HashMap<>();
+        }
+
+        Major major = new Major(MAJOR.FINANCE, MAJOR.FINANCE.getTranslatedName(), 1);
+
+        Student student = new Student(
+                "Aruzhan",
+                "Sapar",
+                "aruzhan@kbtu.kz",
+                "+77010000001",
+                LocalDate.of(2004, 5, 10),
+                GENDER.FEMALE,
+                "vipka",
+                major,  
+                SCHOOLS.BS,  
+                PROGRAMS.BACHELOR 
+        );
+
+        Teacher oopTeacher = new Teacher(
+                "Muragul",
+                "Muratbekova",
+                "muratbekova@kbtu.kz",
+                "hz lol",
+                LocalDate.of(1990, 5, 15),
+                GENDER.FEMALE,
+                "super_cool",
+                TEACHER_LVL.PROFESSOR,
+                SCHOOLS.SITE);
+
+        oopTeacher.addSubject(oop);
+
+        adamdarMap.put(student.getEmail(), student);
+        adamdarMap.put(oopTeacher.getEmail(), oopTeacher);
+        DataStorage.saveAdamdar(adamdarMap);
+
+        subjectsCatalog.put(oop.getId(), oop);
+        DataStorage.saveSubjects(subjectsCatalog);
+
+        Map<String, ScheduledLesson> scheduleMap = new HashMap<>();
+        scheduleMap.put(oopLecture.getId(), oopLecture);
+
+        ScheduleSlot oopLabSlot = new ScheduleSlot(
+                DayOfWeek.WEDNESDAY,
+                LocalTime.of(11, 0),
+                LocalTime.of(12, 0),
+                "455");
+
+        ScheduledLesson oopLaboratory = new ScheduledLesson(
+                "P_CSCI2106",
+                oop,
+                oopTeacher,
+                LessonType.PRACTICE,
+                oopLabSlot,
+                null);
+        scheduleMap.put(oopLaboratory.getId(), oopLaboratory);
+
+        DataStorage.saveSchedule(scheduleMap);
+
         new LoginMenu().show();
     }
 }
@@ -334,7 +434,6 @@ class LoginMenu {
             Printer.println(" [4]  -> View Registered Subjects (Current Semester)");
             Printer.println(" [5]  -> View Transcript & My Marks");
             Printer.println(" [6]  -> Rate a Teacher");
-            Printer.println(" [7]  -> Rate a Teacher");
             if (student.isGraduateStudent()) {
                 Printer.println(" [7]  -> Graduate Research Dashboard");
             }
@@ -350,7 +449,6 @@ class LoginMenu {
                     Printer.debugPrintInfo("-> selected: Student Private Data");
                     Printer.printInfo("-> selected: Student Private Data");
 
-                    // Динамически вытаскиваем данные из объекта student
                     String fullName = student.getF_name() + " " + student.getL_name();
                     String email = student.getEmail();
                     String phone = student.getPhoneNumber();
@@ -360,7 +458,6 @@ class LoginMenu {
 
                     String majorStr = student.getMajor().getName().getTranslatedName();
 
-                    // Твоя красивая псевдографическая рамка
                     Printer.println("┌──────────────────────────────────────────────────────────────────────────┐");
                     Printer.println("│                           STUDENT PROFILE                                │");
                     Printer.println("├──────────────────────────────────────────────────────────────────────────┤");
@@ -391,86 +488,22 @@ class LoginMenu {
                 }
 
                 case "2" -> {
-                    Printer.debugPrintInfo("-> selected: Register for Subject");
-                    TUIConsole.clearScreen();
-                    Printer.println("=== SUBJECT REGISTRATION ===");
-
-                    Map<String, Subject> allSubjectsMap = DataStorage.loadSubjects();
-
-                    List<Subject> availableForMe = new ArrayList<>();
-
-                    for (Subject sub : allSubjectsMap.values()) {
-                        if (sub.isAvailableForMajor(student.getMajor())) {
-                            availableForMe.add(sub);
-                        }
-                    }
-
-                    if (availableForMe.isEmpty()) {
-                        Printer.printWarning("No subjects found available for your major.");
-                    } else {
-                        for (int i = 0; i < availableForMe.size(); i++) {
-                            Subject s = availableForMe.get(i);
-                            Printer.println(String.format(" [%d] -> %s (%s) | Credits: %d",
-                                    (i + 1), s.getTitle(), s.getId(), s.getCredits()));
-                        }
-
-                        Printer.printAction("\nEnter subject number to register (0 to cancel): ", false);
-                        try {
-                            int subIdx = Integer.parseInt(scanner.nextLine().trim());
-                            if (subIdx > 0 && subIdx <= availableForMe.size()) {
-                                Subject selectedSub = availableForMe.get(subIdx - 1);
-
-                                student.registerSubject(selectedSub);
-
-                                Map<String, Adam> ada = DataStorage.loadAdamdar();
-                                ada.put(student.getEmail(), student);
-                                DataStorage.saveAdamdar(ada);
-                            }
-                        } catch (Exception e) {
-                            Printer.printError("Invalid choice.");
-                        }
-                    }
-                    TUIConsole.waitForEnter();
+                    SubjectRegistrationManager.processRegistration(student, scanner);
                 }
 
                 case "3" -> {
-                    Printer.debugPrintInfo("-> selected: Drop Subject");
-                    TUIConsole.clearScreen();
-                    Printer.println("=== DROP REGISTERED SUBJECT ===");
-                    Vector<Subject> mySubs = student.getRegisteredSubjects();
-
-                    if (mySubs.isEmpty()) {
-                        Printer.printWarning("You don't have any registered subjects yet.");
-                    } else {
-                        for (int i = 0; i < mySubs.size(); i++) {
-                            Printer.println(String.format(" [%d] -> %s", (i + 1), mySubs.get(i).getTitle()));
-                        }
-
-                        Printer.printAction("\nEnter subject number to DROP (0 to cancel): ", false);
-                        try {
-                            int dropIdx = Integer.parseInt(scanner.nextLine().trim());
-                            if (dropIdx > 0 && dropIdx <= mySubs.size()) {
-                                Subject toDrop = mySubs.get(dropIdx - 1);
-
-                                student.dropSubject(toDrop); // Твой метод удаления
-
-                                // Сохраняем базу
-                                Map<String, Adam> ada = DataStorage.loadAdamdar();
-                                ada.put(student.getEmail(), student);
-                                DataStorage.saveAdamdar(ada);
-                            }
-                        } catch (Exception e) {
-                            Printer.printError("Invalid choice.");
-                        }
-                    }
-                    TUIConsole.waitForEnter();
+                    SubjectRegistrationManager.processDrop(student, scanner);
                 }
 
                 case "4" -> {
                     Printer.debugPrintInfo("-> selected: View Registered Subjects");
                     TUIConsole.clearScreen();
-                    Printer.println("=== CURRENT SEMESTER REGISTERED SUBJECTS ===");
-                    student.viewSubjects(); // Твой метод из класса Student
+                    Printer.println("===========================================================================");
+                    Printer.println("               === CURRENT SEMESTER REGISTERED SUBJECTS ===");
+                    Printer.println("===========================================================================");
+
+                    student.viewSubjects();
+
                     TUIConsole.waitForEnter();
                 }
 
@@ -478,9 +511,9 @@ class LoginMenu {
                     Printer.debugPrintInfo("-> selected: View Transcript & Marks");
                     TUIConsole.clearScreen();
                     Printer.println("=== ACADEMIC TRANSCRIPT ===");
-                    student.viewTranscript(); // Твой метод
+                    student.viewTranscript();
                     Printer.println("\n--- Current Grade Breakdown ---");
-                    student.viewMarks(); // Твой метод
+                    student.viewMarks();
                     TUIConsole.waitForEnter();
                 }
 
@@ -520,9 +553,8 @@ class LoginMenu {
                                     double rate = Double.parseDouble(scanner.nextLine().trim());
 
                                     if (rate >= 1.0 && rate <= 10.0) {
-                                        student.rateTeacher(targetTeacher, rate); // Твой метод рейтинга
+                                        student.rateTeacher(targetTeacher, rate);
 
-                                        // Сохраняем обновленного преподавателя в общую базу
                                         Map<String, Adam> ada = DataStorage.loadAdamdar();
                                         ada.put(targetTeacher.getEmail(), targetTeacher);
                                         DataStorage.saveAdamdar(ada);
@@ -541,26 +573,7 @@ class LoginMenu {
                 }
 
                 case "7" -> {
-                    if (student.isGraduateStudent()) {
-                        Printer.debugPrintInfo("-> selected: Graduate Research Dashboard");
-                        TUIConsole.clearScreen();
-                        Printer.println("=== GRADUATE RESEARCH DASHBOARD ===");
-                        if (student.getProgram() == PROGRAMS.PhD) {
-                            Printer.println("Status: Head of Research Group");
-                            Printer.println(" [1] -> Publish New Research Paper");
-                            Printer.printAction("Choose action: ", false);
-                            if (scanner.nextLine().trim().equals("1")) {
-                                student.publishResearchPaper(); // Твой PhD метод
-                            }
-                        } else {
-                            Printer.println("Status: Master's Degree Researcher");
-                            Printer.println("Feature: Access to ResearchDELO system logs granted.");
-                        }
-                        TUIConsole.waitForEnter();
-                    } else {
-                        System.out.println("ERROR: Wrong input");
-                        TUIConsole.waitForEnter();
-                    }
+                    printResearchPanel(student, scanner);
                 }
 
                 case "8" -> {
@@ -848,6 +861,373 @@ class LoginMenu {
         }
     }
 
+    private void printTeacherPanel(Teacher teacher) {
+        while (true) {
+            TUIConsole.clearScreen();
+            Printer.println("===========================================================================");
+            Printer.println("                       " + LangManager.get("teacher_portal_title"));
+            Printer.println("                       " + teacher.getFullName() + " (" + teacher.getLvl() + ")");
+            Printer.println("===========================================================================");
+
+            Printer.println(" " + LangManager.get("cmd_teacher_courses"));
+            Printer.println(" " + LangManager.get("cmd_put_marks"));
+            Printer.println(" " + LangManager.get("cmd_course_report"));
+            Printer.println(" " + LangManager.get("cmd_teacher_info"));
+            Printer.println(" " + LangManager.get("cmd_research_dashboard"));
+            Printer.println(" " + LangManager.get("cmd_exit"));
+
+            Printer.printAction("\n" + LangManager.get("select_option"), false);
+            String choice = scanner.nextLine().trim();
+
+            if (choice.equals("67"))
+                break;
+
+            switch (choice) {
+                case "1" -> viewCoursesAndStudents(teacher, scanner);
+                case "2" -> handlePutMarks(teacher, scanner);
+                case "3" -> handleGenerateReport(teacher, scanner);
+                case "4" -> {
+                    TUIConsole.clearScreen();
+                    Printer.println("=== MY PROFILE ===");
+                    Printer.println(teacher.toString());
+                    Printer.println("School: " + teacher.getSchool());
+                    Printer.println("Active courses: " + teacher.getSubjects().size());
+                    TUIConsole.waitForEnter();
+                }
+                case "5" -> {
+                    Research.Researcher resTeacher = (Research.Researcher) teacher;
+
+                    if (resTeacher.getResearchDELO() != null) {
+                        printResearchPanel(resTeacher, scanner);
+                    } else {
+                        TUIConsole.clearScreen();
+                        Printer.printError(LangManager.get("research_access_denied"));
+                        TUIConsole.waitForEnter();
+                    }
+                }
+                default -> {
+                    Printer.printError(LangManager.get("error_input"));
+                    TUIConsole.waitForEnter();
+                }
+            }
+        }
+    }
+
+    private static Vector<Student> getAllStudents() {
+        Vector<Student> students = new Vector<>();
+        Map<String, Adam> allPeople = DataStorage.loadAdamdar();
+        for (Adam a : allPeople.values()) {
+            if (a instanceof Student) {
+                students.add((Student) a);
+            }
+        }
+        return students;
+    }
+
+    private static void viewCoursesAndStudents(Teacher teacher, Scanner scanner) {
+        TUIConsole.clearScreen();
+        Vector<Subject> mySubs = teacher.getSubjects();
+
+        if (mySubs == null || mySubs.isEmpty()) {
+            Printer.printWarning(LangManager.get("teacher_no_courses"));
+            TUIConsole.waitForEnter();
+            return;
+        }
+
+        for (int i = 0; i < mySubs.size(); i++) {
+            Printer.println(
+                    String.format(" [%d] -> %s (%s)", (i + 1), mySubs.get(i).getTitle(), mySubs.get(i).getId()));
+        }
+
+        Printer.printAction("\n" + LangManager.get("teacher_select_course"), false);
+        try {
+            int choice = Integer.parseInt(scanner.nextLine().trim());
+            if (choice > 0 && choice <= mySubs.size()) {
+                Subject selected = mySubs.get(choice - 1);
+                TUIConsole.clearScreen();
+                teacher.viewStudents(selected, getAllStudents());
+            }
+        } catch (Exception e) {
+            Printer.printError(LangManager.get("error_input"));
+        }
+        TUIConsole.waitForEnter();
+    }
+
+    private static void handlePutMarks(Teacher teacher, Scanner scanner) {
+        TUIConsole.clearScreen();
+        Vector<Subject> mySubs = teacher.getSubjects();
+        if (mySubs.isEmpty()) {
+            Printer.printWarning(LangManager.get("teacher_no_courses"));
+            TUIConsole.waitForEnter();
+            return;
+        }
+
+        for (int i = 0; i < mySubs.size(); i++) {
+            Printer.println(String.format(" [%d] -> %s", (i + 1), mySubs.get(i).getTitle()));
+        }
+
+        try {
+            Printer.printAction("\n" + LangManager.get("teacher_select_course_action"), false);
+            int courseChoice = Integer.parseInt(scanner.nextLine().trim());
+            if (courseChoice <= 0 || courseChoice > mySubs.size())
+                return;
+            Subject selectedCourse = mySubs.get(courseChoice - 1);
+
+            Vector<Student> currentStudents = new Vector<>();
+            for (Student s : getAllStudents()) {
+                if (s.getRegisteredSubjects().contains(selectedCourse)) {
+                    currentStudents.add(s);
+                }
+            }
+
+            if (currentStudents.isEmpty()) {
+                Printer.printWarning(LangManager.get("teacher_no_students"));
+                TUIConsole.waitForEnter();
+                return;
+            }
+
+            TUIConsole.clearScreen();
+            Printer.println("=== STUDENTS ENROLLED IN " + selectedCourse.getTitle().toUpperCase() + " ===");
+            for (int i = 0; i < currentStudents.size(); i++) {
+                Printer.println(String.format(" [%d] -> %s (%s)", (i + 1), currentStudents.get(i).getFullName(),
+                        currentStudents.get(i).getEmail()));
+            }
+
+            Printer.printAction("\n" + LangManager.get("teacher_select_student"), false);
+            int studentChoice = Integer.parseInt(scanner.nextLine().trim());
+            if (studentChoice <= 0 || studentChoice > currentStudents.size())
+                return;
+            Student targetStudent = currentStudents.get(studentChoice - 1);
+
+            Printer.printAction(LangManager.get("mark_enter_att1") + " ", false);
+            double att1 = Double.parseDouble(scanner.nextLine().trim());
+
+            Printer.printAction(LangManager.get("mark_enter_att2") + " ", false);
+            double att2 = Double.parseDouble(scanner.nextLine().trim());
+
+            Printer.printAction(LangManager.get("mark_enter_final") + " ", false);
+            double fExam = Double.parseDouble(scanner.nextLine().trim());
+
+            teacher.putMarks(targetStudent, selectedCourse, att1, att2, fExam);
+
+            Map<String, Adam> database = DataStorage.loadAdamdar();
+            database.put(targetStudent.getEmail(), targetStudent);
+            DataStorage.saveAdamdar(database);
+
+        } catch (Exception e) {
+            Printer.printError(LangManager.get("error_input"));
+        }
+        TUIConsole.waitForEnter();
+    }
+
+    private static void handleGenerateReport(Teacher teacher, Scanner scanner) {
+        TUIConsole.clearScreen();
+        Vector<Subject> mySubs = teacher.getSubjects();
+        if (mySubs.isEmpty()) {
+            Printer.printWarning(LangManager.get("teacher_no_courses"));
+            TUIConsole.waitForEnter();
+            return;
+        }
+
+        for (int i = 0; i < mySubs.size(); i++) {
+            Printer.println(String.format(" [%d] -> %s", (i + 1), mySubs.get(i).getTitle()));
+        }
+
+        Printer.printAction("\n" + LangManager.get("teacher_select_course_action"), false);
+        try {
+            int choice = Integer.parseInt(scanner.nextLine().trim());
+            if (choice > 0 && choice <= mySubs.size()) {
+                Subject selected = mySubs.get(choice - 1);
+                TUIConsole.clearScreen();
+                teacher.generateReport(selected, getAllStudents());
+            }
+        } catch (Exception e) {
+            Printer.printError(LangManager.get("error_input"));
+        }
+        TUIConsole.waitForEnter();
+    }
+
+    void printResearchPanel(Research.Researcher researcher, Scanner scanner) {
+        if (researcher.getResearchDELO() == null) {
+            Printer.printError(LangManager.get("research_access_denied"));
+            TUIConsole.waitForEnter();
+            return;
+        }
+
+        Research.ResearchDELO delo = researcher.getResearchDELO();
+
+        List<Research.RecommendationLetter> myLetters = new ArrayList<>();
+        List<Research.Startup> myStartups = new ArrayList<>();
+
+        while (true) {
+            TUIConsole.clearScreen();
+            Printer.println("===========================================================================");
+            Printer.println("                       " + LangManager.get("research_menu_title"));
+            Printer.println("===========================================================================");
+            Printer.println(" " + LangManager.get("research_view_papers"));
+            Printer.println(" " + LangManager.get("research_view_projects"));
+            Printer.println(" " + LangManager.get("research_view_stats"));
+            Printer.println(" " + LangManager.get("research_view_letters"));
+            Printer.println(" " + LangManager.get("research_view_startups"));
+            Printer.println(" " + LangManager.get("cmd_exit"));
+
+            Printer.printAction("\n" + LangManager.get("select_option"), false);
+            String choice = scanner.nextLine().trim();
+
+            if (choice.equals("0"))
+                break;
+
+            switch (choice) {
+                case "1" -> {
+                    TUIConsole.clearScreen();
+                    Printer.println(LangManager.get("research_sort_citations"));
+                    Printer.println(LangManager.get("research_sort_date"));
+                    Printer.println(LangManager.get("research_sort_length"));
+                    Printer.printAction("\n" + LangManager.get("select_option"), false);
+                    String sortChoice = scanner.nextLine().trim();
+                    TUIConsole.clearScreen();
+                    switch (sortChoice) {
+                        case "1" -> delo.printpapers(new Research.researchcomparator.CitationSort());
+                        case "2" -> delo.printpapers(new Research.researchcomparator.DateSort());
+                        case "3" -> delo.printpapers(new Research.researchcomparator.lengthSort());
+                        default -> delo.printpapers(new Research.researchcomparator.CitationSort());
+                    }
+                    TUIConsole.waitForEnter();
+                }
+                case "2" -> {
+                    TUIConsole.clearScreen();
+                    Printer.println("=== " + LangManager.get("research_project_menu") + " ===");
+                    Printer.println(" [1] -> View my active projects");
+                    Printer.println(" [2] -> Start a new research project");
+                    Printer.printAction("\n" + LangManager.get("select_option"), false);
+                    String projOpt = scanner.nextLine().trim();
+
+                    if (projOpt.equals("1")) {
+                        TUIConsole.clearScreen();
+                        if (delo.getResearchProjects().isEmpty()) {
+                            Printer.printWarning("No active research projects.");
+                        } else {
+                            for (int i = 0; i < delo.getResearchProjects().size(); i++) {
+                                Research.ResearchProject p = delo.getResearchProjects().get(i);
+                                Printer.println(String.format("[%d] Topic: %s | Participants: %d | Papers: %d",
+                                        i + 1, p.getRPtopic(), p.getParticipants().size(),
+                                        p.getPublishedPapers().size()));
+                            }
+                        }
+                    } else if (projOpt.equals("2")) {
+                        TUIConsole.clearScreen();
+                        Printer.printAction(LangManager.get("research_enter_project_topic") + " ", false);
+                        String topic = scanner.nextLine().trim();
+
+                        Research.ResearchProject newProject = new Research.ResearchProject(topic);
+
+                        try {
+                            newProject.addPartiicipant(researcher);
+                        } catch (Exceptions.NotResearcherException e) {
+                            Printer.printError(e.getMessage());
+                        }
+
+                        delo.addResearchProject(newProject);
+                        Printer.printInfo("Project created and added to your portfolio!");
+                    }
+                    TUIConsole.waitForEnter();
+                }
+                case "3" -> {
+                    TUIConsole.clearScreen();
+                    Printer.println("=== ACADEMIC IMPACT STATISTICS ===");
+                    Printer.println(" Total Papers published: " + delo.getPapercount());
+                    Printer.println(" Total Citations score: " + delo.getTotalcitations());
+                    Printer.println(" Calculated h-index: " + delo.getHindex());
+                    TUIConsole.waitForEnter();
+                }
+                case "4" -> {
+                    TUIConsole.clearScreen();
+                    Printer.println("=== RECOMMENDATION LETTERS ===");
+                    Printer.println(" [1] -> View existing letters");
+                    Printer.println(" [2] -> Generate new auto-letter");
+                    Printer.printAction("\n" + LangManager.get("select_option"), false);
+                    String letterOption = scanner.nextLine().trim();
+
+                    if (letterOption.equals("1")) {
+                        TUIConsole.clearScreen();
+                        if (myLetters.isEmpty()) {
+                            Printer.printWarning("You haven't generated any letters yet.");
+                        } else {
+                            for (Research.RecommendationLetter letter : myLetters) {
+                                letter.printLetter();
+                                Printer.println("----------------------------------------");
+                            }
+                        }
+                    } else if (letterOption.equals("2")) {
+                        TUIConsole.clearScreen();
+                        Printer.printAction(LangManager.get("research_enter_candidate") + " ", false);
+                        String candidate = scanner.nextLine().trim();
+                        Printer.printAction(LangManager.get("research_enter_purpose") + " ", false);
+                        String purpose = scanner.nextLine().trim();
+
+                        Research.RecommendationLetter newLetter = new Research.RecommendationLetter(researcher,
+                                candidate, purpose);
+                        myLetters.add(newLetter);
+                        TUIConsole.clearScreen();
+                        newLetter.printLetter();
+                        Printer.printInfo("\n" + LangManager.get("research_letter_success"));
+                    }
+                    TUIConsole.waitForEnter();
+                }
+                case "5" -> {
+                    TUIConsole.clearScreen();
+                    Printer.println("=== ACADEMIC STARTUPS (KBTU INCUBATOR) ===");
+                    Printer.println(" [1] -> List my startups data");
+                    Printer.println(" [2] -> Launch a new Startup based on papers");
+                    Printer.printAction("\n" + LangManager.get("select_option"), false);
+                    String startupOpt = scanner.nextLine().trim();
+
+                    if (startupOpt.equals("1")) {
+                        TUIConsole.clearScreen();
+                        if (myStartups.isEmpty()) {
+                            Printer.printWarning("No startups launched yet.");
+                        } else {
+                            for (Research.Startup s : myStartups) {
+                                s.data();
+                                Printer.println("----------------------------------------");
+                            }
+                        }
+                    } else if (startupOpt.equals("2")) {
+                        TUIConsole.clearScreen();
+                        Printer.printAction(LangManager.get("research_enter_startup_name") + " ", false);
+                        String sName = scanner.nextLine().trim();
+                        Printer.printAction(LangManager.get("research_enter_startup_desc") + " ", false);
+                        String sDesc = scanner.nextLine().trim();
+                        Printer.printAction(LangManager.get("research_enter_startup_ind") + " ", false); // Опечатка
+                                                                                                         // скобки
+                                                                                                         // исправлена
+                        String sInd = scanner.nextLine().trim();
+                        Printer.printAction(LangManager.get("research_enter_funding") + " ", false);
+                        double sFunding = Double.parseDouble(scanner.nextLine().trim());
+
+                        Research.Startup startup = new Research.Startup(sName, sDesc, sInd);
+                        startup.setFunding(sFunding);
+                        startup.addFounder(researcher);
+
+                        if (!delo.getResearchPapers().isEmpty()) {
+                            startup.addPaper(delo.getResearchPapers().get(0));
+                        }
+
+                        myStartups.add(startup);
+                        TUIConsole.clearScreen();
+                        Printer.println(startup.toString());
+                        Printer.printInfo("\nStartup launched successfully in the system!");
+                    }
+                    TUIConsole.waitForEnter();
+                }
+                default -> {
+                    Printer.printError(LangManager.get("error_input"));
+                    TUIConsole.waitForEnter();
+                }
+            }
+        }
+    }
+
     private void printDeanPanel(Dean dean) {
         while (true) {
             TUIConsole.clearScreen();
@@ -858,7 +1238,7 @@ class LoginMenu {
             Printer.println(" [1]-> View Faculty Students");
             Printer.println(" [2]-> View Faculty Statistics (Average GPA)");
             Printer.println(" [3]-> Manage Student Complaints & Requests");
-            Printer.println(" [3]-> Create Teacher");
+            Printer.println(" [4]-> Create Teacher");
             Printer.println(" [67]-> LOGOUT");
 
             Printer.printAction("\nChoose action: ", false);
@@ -1031,143 +1411,6 @@ class LoginMenu {
                 }
             }
         }
-    }
 
-    private void printTeacherPanel(Teacher teacher) {
-        while (true) {
-            TUIConsole.clearScreen();
-            Printer.println("=================================");
-            Printer.println("       TEACHER PANEL: " + teacher.getF_name().toUpperCase());
-            Printer.println(
-                    "       RANK: " + teacher.getLvl() + " | RATING: " + String.format("%.2f", teacher.getRating()));
-            Printer.println("=================================");
-            Printer.println(" [1]-> View My Subjects");
-            Printer.println(" [2]-> View Students in My Subject");
-            Printer.println(" [3]-> Put / Update Student Marks");
-            Printer.println(" [4]-> Generate Subject Performance Report");
-            Printer.println(" [67]-> LOGOUT");
-
-            Printer.printAction("\nChoose action: ", false);
-            String choice = scanner.nextLine().trim();
-
-            Map<String, Adam> ada = DataStorage.loadAdamdar();
-            Vector<Student> allStudents = new Vector<>();
-            for (Adam a : ada.values()) {
-                if (a instanceof Student) {
-                    allStudents.add((Student) a);
-                }
-            }
-
-            switch (choice) {
-                case "1" -> {
-                    TUIConsole.clearScreen();
-                    Printer.println("=== MY SUBJECTS ===");
-                    teacher.viewSubjects();
-                    TUIConsole.waitForEnter();
-                }
-
-                case "2" -> {
-                    TUIConsole.clearScreen();
-                    Printer.println("=== VIEW STUDENTS ===");
-                    if (teacher.getSubjects().isEmpty()) {
-                        Printer.printWarning("You don't teach any subjects yet.");
-                    } else {
-                        teacher.viewSubjects();
-                        Printer.printAction("\nEnter Subject ID to view students: ", false);
-                        String subjId = scanner.nextLine().trim();
-
-                        Subject targetSubj = teacher.getSubjects().stream()
-                                .filter(s -> s.getId().equals(subjId))
-                                .findFirst().orElse(null);
-
-                        if (targetSubj != null) {
-                            teacher.viewStudents(targetSubj, allStudents);
-                        } else {
-                            Printer.printError("Subject not found or you don't teach it!");
-                        }
-                    }
-                    TUIConsole.waitForEnter();
-                }
-
-                case "3" -> {
-                    TUIConsole.clearScreen();
-                    Printer.println("=== PUT MARKS ===");
-                    if (teacher.getSubjects().isEmpty()) {
-                        Printer.printWarning("You don't have active subjects to grade.");
-                    } else {
-                        Printer.printAction("Enter Student Email: ", false);
-                        String email = scanner.nextLine().trim();
-                        Student student = (Student) ada.get(email);
-
-                        if (student != null) {
-                            teacher.viewSubjects();
-                            Printer.printAction("\nEnter Subject ID: ", false);
-                            String subjId = scanner.nextLine().trim();
-
-                            Subject targetSubj = teacher.getSubjects().stream()
-                                    .filter(s -> s.getId().equals(subjId))
-                                    .findFirst().orElse(null);
-
-                            if (targetSubj != null) {
-                                try {
-                                    Printer.printAction("First Attestation (0-30): ", false);
-                                    double att1 = Double.parseDouble(scanner.nextLine().trim());
-
-                                    Printer.printAction("Second Attestation (0-30): ", false);
-                                    double att2 = Double.parseDouble(scanner.nextLine().trim());
-
-                                    Printer.printAction("Final Exam (0-40): ", false);
-                                    double fExam = Double.parseDouble(scanner.nextLine().trim());
-
-                                    teacher.putMarks(student, targetSubj, att1, att2, fExam);
-
-                                    DataStorage.saveAdamdar(ada);
-
-                                } catch (NumberFormatException e) {
-                                    Printer.printError("Invalid numbers entered. Grading aborted.");
-                                }
-                            } else {
-                                Printer.printError("Subject not found in your list!");
-                            }
-                        } else {
-                            Printer.printError("Student not found!");
-                        }
-                    }
-                    TUIConsole.waitForEnter();
-                }
-
-                case "4" -> {
-                    TUIConsole.clearScreen();
-                    Printer.println("=== GENERATE ACADEMIC REPORT ===");
-                    if (teacher.getSubjects().isEmpty()) {
-                        Printer.printWarning("No subjects available.");
-                    } else {
-                        teacher.viewSubjects();
-                        Printer.printAction("\nEnter Subject ID for statistical report: ", false);
-                        String subjId = scanner.nextLine().trim();
-
-                        Subject targetSubj = teacher.getSubjects().stream()
-                                .filter(s -> s.getId().equals(subjId))
-                                .findFirst().orElse(null);
-
-                        if (targetSubj != null) {
-                            teacher.generateReport(targetSubj, allStudents);
-                        } else {
-                            Printer.printError("Subject not found!");
-                        }
-                    }
-                    TUIConsole.waitForEnter();
-                }
-
-                case "67" -> {
-                    return;
-                }
-
-                default -> {
-                    System.out.println("ERROR: Wrong input");
-                    TUIConsole.waitForEnter();
-                }
-            }
-        }
     }
 }

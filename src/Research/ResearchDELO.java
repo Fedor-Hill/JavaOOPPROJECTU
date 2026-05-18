@@ -1,4 +1,4 @@
- //what it means to be a reseracher, like what makes you qualify, 
+//what it means to be a reseracher, like what makes you qualify, 
 //teachers and studnets, bachelor studnets, employees can be researchers, this is decided by the manager or the admin, with setresearcher()
 //professors(teachers) are always researchers
 //papers and projects are gonna be lists since they might have worke don more than one paper, more than one project
@@ -6,12 +6,14 @@
 //th eproject requires printPaper()sorted by (citations, date, length  )
 package Research;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class ResearchDELO {
+public class ResearchDELO implements Serializable { 
+    private static final long serialVersionUID = 1L;
 
     private List<ResearchPaper> researchPapers;
     private List<ResearchProject> researchProjects;

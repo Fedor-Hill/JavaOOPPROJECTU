@@ -77,7 +77,8 @@ public class Attestation implements Serializable {
     }
 
     public void recalculate() {
-        digitGrade = normalize(first) + normalize(second) + normalize(finalExam);
+        this.digitGrade = this.normalize(this.first, (double) 30.0F) + this.normalize(this.second, (double) 30.0F)
+                + this.normalize(this.finalExam, (double) 40.0F);
         letterGrade = calculateLetterGrade(digitGrade);
         traditionalGrade = isPassed() ? "Passed" : "Not passed";
 
@@ -90,21 +91,31 @@ public class Attestation implements Serializable {
         }
     }
 
-    private double normalize(double value) {
-        return Math.max(0, Math.min(100, value));
-    }
+    private double normalize(double var1, double var3) {
+      return Math.max((double)0.0F, Math.min(var3, var1));
+   }
 
     private String calculateLetterGrade(double grade) {
-        if (grade >= 95) return "A";
-        if (grade >= 90) return "A-";
-        if (grade >= 85) return "B+";
-        if (grade >= 80) return "B";
-        if (grade >= 75) return "B-";
-        if (grade >= 70) return "C+";
-        if (grade >= 65) return "C";
-        if (grade >= 60) return "C-";
-        if (grade >= 55) return "D+";
-        if (grade >= 50) return "D";
+        if (grade >= 95)
+            return "A";
+        if (grade >= 90)
+            return "A-";
+        if (grade >= 85)
+            return "B+";
+        if (grade >= 80)
+            return "B";
+        if (grade >= 75)
+            return "B-";
+        if (grade >= 70)
+            return "C+";
+        if (grade >= 65)
+            return "C";
+        if (grade >= 60)
+            return "C-";
+        if (grade >= 55)
+            return "D+";
+        if (grade >= 50)
+            return "D";
         return "F";
     }
 
